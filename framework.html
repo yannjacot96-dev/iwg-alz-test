@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>IWG 2024 — Alzheimer Disease is a Clinical-Biological Construct</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --blue:       #C41230;
+      --blue-light: #e8354a;
+      --blue-pale:  #fce8ec;
+      --accent:     #8B0018;
+      --text:       #1a1a1a;
+      --muted:      #6b6b6b;
+      --border:     #e8dede;
+      --white:      #ffffff;
+      --bg:         #f8f6f6;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+    }
+
+    /* ── HEADER ── */
+    header {
+      background: var(--white);
+      border-bottom: 3px solid var(--blue);
+      padding: 40px 24px 32px;
+    }
+    .header-inner {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    .header-journal {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 18px;
+      flex-wrap: wrap;
+    }
+    .journal-name {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--text);
+      letter-spacing: 0.2px;
+    }
+    .journal-sep {
+      color: var(--muted);
+      font-weight: 300;
+    }
+    .journal-type {
+      font-size: 0.9rem;
+      color: var(--muted);
+    }
+    .journal-badge {
+      margin-left: auto;
+      font-size: 0.78rem;
+      color: var(--muted);
+      font-style: italic;
+    }
+    header h1 {
+      font-size: clamp(1.5rem, 3.5vw, 2.2rem);
+      font-weight: 700;
+      line-height: 1.2;
+      color: var(--blue);
+      margin-bottom: 20px;
+      max-width: 820px;
+    }
+    .header-authors {
+      font-size: 0.82rem;
+      color: var(--text);
+      line-height: 1.6;
+      margin-bottom: 20px;
+      max-width: 820px;
+    }
+    .header-meta {
+      display: flex;
+      gap: 24px;
+      flex-wrap: wrap;
+      font-size: 0.8rem;
+      color: var(--muted);
+      border-top: 1px solid var(--border);
+      padding-top: 14px;
+    }
+    .header-meta span { display: flex; align-items: center; gap: 6px; }
+
+    /* ── NAV ── */
+    nav {
+      background: var(--white);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    nav ul {
+      display: flex;
+      justify-content: center;
+      gap: 0;
+      list-style: none;
+      max-width: 900px;
+      margin: 0 auto;
+      overflow-x: auto;
+    }
+    nav a {
+      display: block;
+      padding: 14px 18px;
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 500;
+      white-space: nowrap;
+      transition: color 0.2s, border-bottom 0.2s;
+      border-bottom: 3px solid transparent;
+    }
+    nav a:hover  { color: var(--blue); border-bottom-color: var(--blue); }
+    nav a.active { color: var(--blue); border-bottom-color: var(--blue); }
+
+    /* ── LAYOUT ── */
+    main { max-width: 900px; margin: 0 auto; padding: 0 24px 80px; }
+
+    section { padding-top: 64px; }
+
+    h2 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--blue);
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    h2 .icon {
+      width: 36px; height: 36px;
+      background: var(--blue-pale);
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1rem;
+      flex-shrink: 0;
+    }
+    .section-intro {
+      color: var(--muted);
+      font-size: 0.95rem;
+      margin-bottom: 28px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    /* ── CARDS ── */
+    .card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 28px;
+      margin-bottom: 20px;
+    }
+    .card h3 {
+      font-size: 1.05rem;
+      font-weight: 600;
+      margin-bottom: 10px;
+      color: var(--blue);
+    }
+    .card p { font-size: 0.95rem; color: var(--text); }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+    .stat-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px;
+      text-align: center;
+    }
+    .stat-card .number {
+      font-size: 2.2rem;
+      font-weight: 800;
+      color: var(--accent);
+      line-height: 1;
+      margin-bottom: 6px;
+    }
+    .stat-card .label {
+      font-size: 0.85rem;
+      color: var(--muted);
+      line-height: 1.4;
+    }
+
+    /* ── HIGHLIGHT BOX ── */
+    .highlight {
+      background: var(--blue-pale);
+      border-left: 4px solid var(--blue);
+      border-radius: 0 8px 8px 0;
+      padding: 20px 24px;
+      margin: 24px 0;
+      font-size: 0.95rem;
+    }
+    .highlight strong { color: var(--blue); }
+
+    /* ── FRAMEWORK STEPS ── */
+    .framework {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      margin: 24px 0;
+    }
+    .framework-item {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px 20px;
+      position: relative;
+      overflow: hidden;
+    }
+    .framework-item::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0;
+      height: 4px;
+    }
+    .framework-item.at-risk::before { background: #22c55e; }
+    .framework-item.presymp::before { background: #f59e0b; }
+    .framework-item.ad::before      { background: #ef4444; }
+
+    .framework-item .badge {
+      display: inline-block;
+      border-radius: 6px;
+      padding: 3px 10px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      margin-bottom: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .at-risk .badge  { background: #dcfce7; color: #15803d; }
+    .presymp .badge  { background: #fef3c7; color: #b45309; }
+    .ad .badge       { background: #fee2e2; color: #b91c1c; }
+
+    .framework-item h4 {
+      font-size: 0.95rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+      color: var(--text);
+    }
+    .framework-item p { font-size: 0.85rem; color: var(--muted); }
+
+    /* ── COMPARISON TABLE ── */
+    .table-wrap { overflow-x: auto; margin: 24px 0; border-radius: 12px; border: 1px solid var(--border); }
+    table { width: 100%; border-collapse: collapse; background: var(--white); font-size: 0.9rem; }
+    thead { background: var(--blue); color: var(--white); }
+    thead th { padding: 14px 18px; text-align: left; font-weight: 600; }
+    tbody tr:nth-child(even) { background: var(--blue-pale); }
+    tbody td { padding: 13px 18px; border-top: 1px solid var(--border); vertical-align: top; }
+    tbody td:first-child { font-weight: 600; color: var(--blue); }
+    .td-negative { color: #b91c1c; }
+    .td-positive { color: #15803d; }
+
+    /* ── RECOMMENDATIONS ── */
+    .reco-list { display: grid; gap: 14px; margin-top: 24px; }
+    .reco-item {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px 24px;
+      display: flex;
+      gap: 18px;
+      align-items: flex-start;
+    }
+    .reco-num {
+      width: 34px; height: 34px;
+      background: var(--blue);
+      color: var(--white);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700;
+      font-size: 0.9rem;
+      flex-shrink: 0;
+    }
+    .reco-item h4 { font-size: 0.95rem; font-weight: 600; margin-bottom: 4px; color: var(--blue); }
+    .reco-item p  { font-size: 0.88rem; color: var(--muted); }
+
+    /* ── QUOTE ── */
+    blockquote {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 32px;
+      text-align: center;
+      margin: 32px 0;
+      position: relative;
+    }
+    blockquote::before {
+      content: '"';
+      font-size: 5rem;
+      color: var(--blue-pale);
+      position: absolute;
+      top: -10px; left: 20px;
+      line-height: 1;
+      font-family: Georgia, serif;
+    }
+    blockquote p {
+      font-size: 1.05rem;
+      font-style: italic;
+      color: var(--text);
+      max-width: 680px;
+      margin: 0 auto 12px;
+      position: relative;
+    }
+    blockquote cite { font-size: 0.85rem; color: var(--muted); }
+
+    /* ── AUTHORS ── */
+    .authors-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 28px;
+    }
+    .authors-card p { font-size: 0.88rem; color: var(--muted); line-height: 1.9; }
+    .authors-card .lead-author {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--blue);
+      margin-bottom: 8px;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--blue);
+      color: rgba(255,255,255,0.7);
+      text-align: center;
+      padding: 32px 24px;
+      font-size: 0.85rem;
+      margin-top: 40px;
+    }
+    footer strong { color: var(--white); }
+
+    @media (max-width: 640px) {
+      nav a { padding: 12px 12px; font-size: 0.8rem; }
+      .grid-3 { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════════ NAVIGATION ═══════════════ -->
+<nav>
+  <ul>
+    <li><a href="index.html">Home</a></li>
+    <li><a href="framework.html" class="active">IWG 2024 Framework</a></li>
+    <li><a href="steering-committee.html">Steering Committee</a></li>
+    <li><a href="educational-material.html">Educational Material</a></li>
+  </ul>
+</nav>
+
+<!-- ═══════════════ HEADER ═══════════════ -->
+<header>
+  <div class="header-inner">
+    <div class="header-journal">
+      <span class="journal-name">JAMA Neurology</span>
+      <span class="journal-sep">|</span>
+      <span class="journal-type">Special Communication</span>
+      <span class="journal-badge">Clinical Review &amp; Education</span>
+    </div>
+    <h1>Alzheimer Disease is a Clinical-Biological Construct — An International Working Group Recommendation</h1>
+    <p class="header-authors">
+      Bruno Dubois, MD, MSc; Nicolas Villain, MD, PhD; Lon Schneider, MD, MSc; Nick Fox, MD, MA;
+      Noll Campbell, PharmD, MSc; Douglas Galasko, MD, MSc; Miia Kivipelto, MD, PhD; Frank Jessen, MD;
+      Bernard Hanseeuw, MD, PhD; Mercè Boada, MD, PhD; Frederik Barkhof, MD, PhD; Agneta Nordberg, MD, PhD;
+      Lutz Frolich, MD, PhD; Gunhild Waldemar, MD, DMSc; Kristian Steen Frederiksen, MD, PhD;
+      Alessandro Padovani, MD, PhD; Vincent Planche, MD, PhD; Christopher Rowe, MD; Alexandre Bejanin, PhD;
+      Agustin Ibanez, PhD; Stefano Cappa, MD; Paulo Caramelli, MD, PhD; Ricardo Nitrini, MD, PhD;
+      Ricardo Allegri, MD, PhD; Andrea Slachevsky, MD, PhD; Leonardo Cruz de Souza, MD, PhD; Andrea Bozoki, MD;
+      Eric Widera, MD; Kaj Blennow, MD, PhD; Craig Ritchie, MD, PhD; Marc Agronin, MD; Francisco Lopera, MD;
+      Lisa Delano-Wood, PhD; Stéphanie Bombois, MD, PhD; Richard Levy, MD, PhD; Madhav Thambisetty, MD, DPhil;
+      Jean Georges, BA; David T. Jones, MD; Helen Lavretsky, MD, MSc; Jonathan Schott, MD, BSc;
+      Jennifer Gatchel, MD, PhD; Sandra Swantek, MD; Paul Newhouse, MD; Howard H. Feldman, MD;
+      Giovanni B. Frisoni, MD
+    </p>
+    <div class="header-meta">
+      <span>JAMA Neurol. doi:10.1001/jamaneurol.2024.3770</span>
+      <span>Published online November 1, 2024 · Print: JAMA Neurol. 2024 Dec 01; 81(12):1304–1311</span>
+    </div>
+  </div>
+</header>
+
+<!-- ═══════════════ MAIN ═══════════════ -->
+<main>
+
+  <!-- CONTEXT -->
+  <section id="context">
+    <h2><span class="icon">🎯</span> Context</h2>
+    <p class="section-intro">
+      Since 2018, a movement has emerged to define Alzheimer disease (AD) as a purely biological entity based on biomarker findings. This IWG paper offers a critical response.
+    </p>
+    <div class="card">
+      <h3>Two Competing Views</h3>
+      <p>
+        The <strong>Alzheimer Association (AA) 2024 criteria</strong> define AD as a purely biological entity — a diagnosis can be given to cognitively normal people based on biomarker findings alone (e.g. CSF Aβ/Tau ratios, plasma phosphoTau217).
+      </p>
+      <br />
+      <p>
+        The <strong>International Working Group (IWG)</strong> argues that AD must remain a <em>clinical-biological construct</em> — requiring both measurable cognitive symptoms and positive biomarkers before a diagnosis of AD is made.
+      </p>
+    </div>
+    <div class="highlight">
+      <strong>The IWG position:</strong> Diagnosing AD in cognitively normal individuals based solely on biomarker positivity is clinically unwarranted and potentially harmful — most of these individuals will never develop symptoms.
+    </div>
+  </section>
+
+  <!-- BIOMARKERS -->
+  <section id="biomarkers">
+    <h2><span class="icon">🔬</span> The Value of Biomarkers</h2>
+    <p class="section-intro">
+      Biomarkers have transformed Alzheimer research — but their role in the clinic requires careful contextualization.
+    </p>
+    <div class="grid-3">
+      <div class="card">
+        <h3>Validated Tools</h3>
+        <p>Amyloid PET, CSF &amp; plasma biomarkers have been validated against autopsy-derived brain pathology and justify inclusion in diagnostic workups.</p>
+      </div>
+      <div class="card">
+        <h3>Research Revolution</h3>
+        <p>Biomarkers enable in-vivo monitoring of pathological changes, pharmacodynamic evaluation, and surrogate endpoints in clinical trials.</p>
+      </div>
+      <div class="card">
+        <h3>Not Sufficient Alone</h3>
+        <p>"Core 1 biomarkers" are individually insufficient to account for the many mechanisms underlying the disease. They should be conceptualized as <em>risk factors</em>, not disease markers.</p>
+      </div>
+    </div>
+    <div class="card">
+      <h3>In Cognitively Impaired Patients</h3>
+      <p>
+        The IWG fully supports the use of biomarkers in patients with cognitive impairment. The combination of a recognized <strong>clinical phenotype</strong> (amnestic syndrome, logopenic aphasia, posterior cortical atrophy…) <strong>plus</strong> positive AD biomarkers establishes the clinical-biological diagnosis of AD — from prodromal to dementia stages. This framework was central to FDA approval of anti-amyloid treatments.
+      </p>
+    </div>
+  </section>
+
+  <!-- CORE PROBLEM -->
+  <section id="problem">
+    <h2><span class="icon">⚠️</span> The Core Problem</h2>
+    <p class="section-intro">
+      The key concern: applying a biological-only definition of AD to cognitively normal individuals creates serious clinical and societal risks.
+    </p>
+    <div class="grid-3">
+      <div class="stat-card">
+        <div class="number">21.9%</div>
+        <div class="label">Lifetime AD risk for amyloid-positive 65-year-old men — only 1.7× higher than amyloid-negative</div>
+      </div>
+      <div class="stat-card">
+        <div class="number">17%</div>
+        <div class="label">Of cognitively normal amyloid-positive individuals progress to MCI over 6 years</div>
+      </div>
+      <div class="stat-card">
+        <div class="number">8 yrs</div>
+        <div class="label">No significant clinical progression observed in ADNI cohort with isolated amyloid positivity</div>
+      </div>
+    </div>
+    <div class="highlight">
+      <strong>Key finding:</strong> The majority of biomarker-positive cognitively normal individuals will <em>not</em> become symptomatic along a proximate timeline. The cancer analogy — which implies near-certain progression — does not apply to sporadic AD pathology.
+    </div>
+    <div class="card">
+      <h3>Why the Cancer Analogy Does Not Apply</h3>
+      <p>
+        In <strong>autosomal dominant AD</strong> (APP, PSEN1, PSEN2 mutations), near-100% penetrance makes a predictive model appropriate.
+        In <strong>sporadic AD</strong>, however, lifetime risk of symptoms is far lower, driven by stochastic factors including non-APOE genes, environment, co-pathologies, and resilience mechanisms.
+      </p>
+    </div>
+  </section>
+
+  <!-- IWG FRAMEWORK -->
+  <section id="framework">
+    <h2><span class="icon">🗂️</span> The 2024 IWG Framework</h2>
+    <p class="section-intro">
+      The IWG proposes a three-tier lexicon that separates cognitively normal biomarker-positive individuals into distinct, clinically meaningful categories.
+    </p>
+    <div class="framework">
+      <div class="framework-item at-risk">
+        <span class="badge">At-Risk</span>
+        <h4>Asymptomatic At-Risk</h4>
+        <p>Cognitively normal individuals at increased risk due to a specific biomarker profile: brain amyloidosis (isolated or associated with tauopathy limited to medial temporal regions), or a positive phospho-tau fluid biomarker. Progression is uncertain — they should <strong>not</strong> be labeled as having AD. Goal: risk communication and lifestyle intervention.</p>
+      </div>
+      <div class="framework-item presymp">
+        <span class="badge">Presymptomatic AD</span>
+        <h4>Presymptomatic AD</h4>
+        <p>Specific biomarker profiles indicating very high lifetime risk of progression — reserved for: autosomal dominant mutations, Down syndrome, APOE ε4 homozygous + SORL1 loss, or combined amyloid + neocortical tau PET positivity.</p>
+      </div>
+      <div class="framework-item ad">
+        <span class="badge">Alzheimer Disease</span>
+        <h4>Alzheimer Disease</h4>
+        <p>A recognized <strong>clinical phenotype</strong> (amnestic syndrome of the hippocampal type, logopenic aphasia, posterior cortical atrophy, or less common variants) <strong>plus</strong> positive CSF or PET AD biomarkers (amyloid and/or tau). Includes both prodromal (MCI, no loss of function) and dementia (with loss of function) stages. Eligible for diagnosis and treatment.</p>
+      </div>
+    </div>
+    <div class="card">
+      <h3>The Probabilistic Amyloid Cascade Model</h3>
+      <p>
+        Penetrance decreases along the spectrum: <strong>autosomal dominant</strong> (~100%) → <strong>APOE ε4 carriers</strong> (intermediate) → <strong>APOE ε4 non-carriers</strong> (lowest). Decreasing penetrance reflects increasing contributions of stochastic factors: non-APOE genes, environment, co-pathologies, and resilience.
+      </p>
+    </div>
+  </section>
+
+  <!-- COMPARISON -->
+  <section id="comparison">
+    <h2><span class="icon">⚖️</span> AA 2024 vs. IWG 2024</h2>
+    <p class="section-intro">
+      A direct comparison of the two competing frameworks across key clinical dimensions.
+    </p>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Dimension</th>
+            <th>AA 2024</th>
+            <th>IWG 2024</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>AD Definition</td>
+            <td class="td-negative">Biological only</td>
+            <td class="td-positive">Clinical-biological</td>
+          </tr>
+          <tr>
+            <td>Cognitively Normal + Biomarker(+)</td>
+            <td class="td-negative">Can be diagnosed with AD</td>
+            <td class="td-positive">Labeled "at-risk" — NOT AD*</td>
+          </tr>
+          <tr>
+            <td>Disclosure to Normal Individuals</td>
+            <td class="td-negative">"You have Alzheimer disease"</td>
+            <td class="td-positive">"You are at-risk for Alzheimer disease"</td>
+          </tr>
+          <tr>
+            <td>Trial Endpoints</td>
+            <td class="td-negative">Biomarkers can be primary endpoints</td>
+            <td class="td-positive">Clinical efficacy required</td>
+          </tr>
+          <tr>
+            <td>Societal Risk</td>
+            <td class="td-negative">Psychological harm, off-label drug use, false positives</td>
+            <td class="td-positive">Risk communication, prevention-focused</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p style="font-size:0.82rem; color:var(--muted); margin-top:8px;">* Except rare cases meeting presymptomatic AD criteria (autosomal dominant mutations, Down syndrome, very high-risk biomarker profiles).</p>
+  </section>
+
+  <!-- RECOMMENDATIONS -->
+  <section id="recommendations">
+    <h2><span class="icon">✅</span> Key Recommendations</h2>
+    <p class="section-intro">
+      Four core recommendations from the IWG for clinical practice and research.
+    </p>
+    <div class="reco-list">
+      <div class="reco-item">
+        <div class="reco-num">1</div>
+        <div>
+          <h4>AD = Clinical-Biological Entity</h4>
+          <p>Alzheimer disease requires both documented cognitive impairment and positive AD biomarkers (amyloid and/or tau). A biological finding alone is not sufficient.</p>
+        </div>
+      </div>
+      <div class="reco-item">
+        <div class="reco-num">2</div>
+        <div>
+          <h4>No Routine Testing in Cognitively Normal Individuals</h4>
+          <p>Biomarkers serve as risk markers — not diagnostic markers — in people without cognitive symptoms. Routine testing in this population is not recommended.</p>
+        </div>
+      </div>
+      <div class="reco-item">
+        <div class="reco-num">3</div>
+        <div>
+          <h4>At-Risk ≠ Disease</h4>
+          <p>Biomarker-positive cognitively normal individuals should be communicated their risk status — not diagnosed with AD. This avoids psychological harm and off-label treatment pressure.</p>
+        </div>
+      </div>
+      <div class="reco-item">
+        <div class="reco-num">4</div>
+        <div>
+          <h4>Expand Presymptomatic AD — Carefully</h4>
+          <p>Reserve the "presymptomatic AD" label for those with specific biomarker profiles indicating near-certain imminent progression (autosomal dominant mutations, Down syndrome, very high genetic risk or combined amyloid + tau PET positivity).</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FUTURE -->
+  <section id="future">
+    <h2><span class="icon">🔭</span> From Diagnosis to Prevention</h2>
+    <p class="section-intro">
+      The IWG envisions a shift toward structured risk evaluation and population-level prevention.
+    </p>
+    <div class="grid-3">
+      <div class="card">
+        <h3>Evaluate Risk</h3>
+        <p>Personalized biomarker and lifestyle profiling through dedicated Brain Health Services (dBHS).</p>
+      </div>
+      <div class="card">
+        <h3>Communicate Risk</h3>
+        <p>Amyloid status ≠ AD diagnosis. Structured, nuanced communication of individual risk — not disease labeling.</p>
+      </div>
+      <div class="card">
+        <h3>Reduce Risk</h3>
+        <p>Modifiable risk factors, lifestyle changes, and future preventive treatments — analogous to managing vascular risk to prevent stroke.</p>
+      </div>
+    </div>
+    <div class="grid-3" style="margin-top:0;">
+      <div class="card">
+        <h3>Observational Studies</h3>
+        <p>Long follow-up combining lifestyle factors and biomarkers, with emphasis on diverse and underrepresented populations.</p>
+      </div>
+      <div class="card">
+        <h3>Interventional Trials</h3>
+        <p>Test pharmacological and risk-reduction strategies in cognitively normal at-risk individuals.</p>
+      </div>
+      <div class="card">
+        <h3>Equity</h3>
+        <p>Include non-white, ethnic minority, and low/middle-income country (LMIC) populations in future research.</p>
+      </div>
+    </div>
+
+    <blockquote>
+      <p>Communicating a risk condition may stimulate these individuals to control their risk factors and change their lifestyle, as well as prompting public health policymakers to foster initiatives and programs for reducing dementia risk at the population level.</p>
+      <cite>— IWG 2024</cite>
+    </blockquote>
+  </section>
+
+  <!-- AUTHORS -->
+  <section id="authors">
+    <h2><span class="icon">👥</span> Authors &amp; Affiliations</h2>
+    <p class="section-intro">
+      This recommendation was produced by an international consortium of 46 neurologists, psychiatrists, and researchers across 4 continents.
+    </p>
+    <div class="authors-card">
+      <p class="lead-author">Lead authors: Bruno Dubois (Paris), Nicolas Villain (Paris) — Senior authors: Howard H. Feldman (San Diego), Giovanni B. Frisoni (Geneva)</p>
+      <p>
+        AP-HP / Sorbonne Université (Paris, France) · UCL Queen Square Institute of Neurology (London, UK) · Keck School of Medicine USC (Los Angeles, USA) · Karolinska Institutet (Stockholm, Sweden) · University of Cologne / DZNE (Germany) · UCLouvain (Brussels, Belgium) · Ace Alzheimer Center (Barcelona, Spain) · University College London (UK) · University of Gothenburg (Sweden) · University of St Andrews (Scotland, UK) · Mayo Clinic (Rochester, USA) · University of California San Diego · Harvard Medical School · National Institute on Aging (NIH) · Alzheimer Europe (Luxembourg) · University of Geneva / HUG (Switzerland) · and many more institutions across Europe, North America, Latin America, and Australia.
+      </p>
+    </div>
+  </section>
+
+</main>
+
+<!-- ═══════════════ FOOTER ═══════════════ -->
+<footer>
+  <strong>International Working Group on Alzheimer Disease</strong><br>
+  Dubois B, Villain N, Schneider L, Fox N, et al. — <em>JAMA Neurology.</em> 2024;81(12):1304–1311 · doi:10.1001/jamaneurol.2024.3770
+</footer>
+
+</body>
+</html>

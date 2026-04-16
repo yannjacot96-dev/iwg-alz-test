@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>IWG 2024 — Steering Committee</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --blue:       #C41230;
+      --blue-light: #e8354a;
+      --blue-pale:  #fce8ec;
+      --accent:     #8B0018;
+      --text:       #1a1a1a;
+      --muted:      #6b6b6b;
+      --border:     #e8dede;
+      --white:      #ffffff;
+      --bg:         #f8f6f6;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+    }
+
+    /* ── HEADER ── */
+    header {
+      background: var(--white);
+      border-bottom: 3px solid var(--blue);
+      padding: 40px 24px 32px;
+    }
+    .header-inner {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    .header-label {
+      display: inline-block;
+      background: var(--blue-pale);
+      color: var(--blue);
+      border-radius: 20px;
+      padding: 4px 14px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+    header h1 {
+      font-size: clamp(1.6rem, 4vw, 2.4rem);
+      font-weight: 700;
+      line-height: 1.2;
+      color: var(--blue);
+      margin-bottom: 10px;
+    }
+    header p.subtitle {
+      font-size: 1rem;
+      color: var(--muted);
+      max-width: 620px;
+    }
+
+    /* ── NAV ── */
+    nav {
+      background: var(--white);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    nav ul {
+      display: flex;
+      justify-content: center;
+      gap: 0;
+      list-style: none;
+      max-width: 900px;
+      margin: 0 auto;
+      overflow-x: auto;
+    }
+    nav a {
+      display: block;
+      padding: 14px 18px;
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 500;
+      white-space: nowrap;
+      transition: color 0.2s, border-bottom 0.2s;
+      border-bottom: 3px solid transparent;
+    }
+    nav a:hover { color: var(--blue); border-bottom-color: var(--blue); }
+    nav a.active { color: var(--blue); border-bottom-color: var(--blue); }
+
+    /* ── LAYOUT ── */
+    main { max-width: 900px; margin: 0 auto; padding: 48px 24px 80px; }
+
+    h2 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--blue);
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    h2 .icon {
+      width: 36px; height: 36px;
+      background: var(--blue-pale);
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1rem;
+      flex-shrink: 0;
+    }
+    .section-intro {
+      color: var(--muted);
+      font-size: 0.95rem;
+      margin-bottom: 36px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    /* ── MEMBER CARDS ── */
+    .members-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+      gap: 24px;
+      margin-bottom: 48px;
+    }
+
+    .member-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+    .member-card-top {
+      background: linear-gradient(135deg, var(--blue-pale) 0%, #f5c0c8 100%);
+      padding: 28px 28px 0;
+      display: flex;
+      gap: 20px;
+      align-items: flex-start;
+    }
+    .avatar {
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      background: var(--blue);
+      color: var(--white);
+      font-size: 1.4rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      border: 3px solid var(--white);
+      box-shadow: 0 2px 8px rgba(26,74,122,0.2);
+      margin-bottom: -16px;
+    }
+    .member-meta {
+      padding-top: 4px;
+    }
+    .member-meta h3 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--blue);
+      margin-bottom: 3px;
+    }
+    .member-meta .role-badge {
+      display: inline-block;
+      background: var(--blue);
+      color: var(--white);
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      padding: 2px 10px;
+      border-radius: 20px;
+      margin-bottom: 6px;
+    }
+    .member-meta .institution {
+      font-size: 0.85rem;
+      color: var(--blue-light);
+      font-weight: 500;
+    }
+    .member-meta .location {
+      font-size: 0.82rem;
+      color: var(--muted);
+    }
+    .member-card-body {
+      padding: 24px 28px 28px;
+    }
+    .member-card-body p {
+      font-size: 0.9rem;
+      color: var(--text);
+      line-height: 1.65;
+      margin-bottom: 16px;
+    }
+    .expertise-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    .tag {
+      background: var(--blue-pale);
+      color: var(--blue);
+      font-size: 0.75rem;
+      font-weight: 500;
+      padding: 3px 10px;
+      border-radius: 20px;
+      border: 1px solid #c5d8f0;
+    }
+
+    /* ── HIGHLIGHT ── */
+    .highlight {
+      background: var(--blue-pale);
+      border-left: 4px solid var(--blue);
+      border-radius: 0 8px 8px 0;
+      padding: 20px 24px;
+      margin: 0 0 40px;
+      font-size: 0.95rem;
+    }
+    .highlight strong { color: var(--blue); }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--blue);
+      color: rgba(255,255,255,0.7);
+      text-align: center;
+      padding: 32px 24px;
+      font-size: 0.85rem;
+      margin-top: 40px;
+    }
+    footer strong { color: var(--white); }
+
+    @media (max-width: 640px) {
+      nav a { padding: 12px 12px; font-size: 0.8rem; }
+      .members-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════════ NAVIGATION ═══════════════ -->
+<nav>
+  <ul>
+    <li><a href="index.html">Home</a></li>
+    <li><a href="framework.html">IWG 2024 Framework</a></li>
+    <li><a href="steering-committee.html" class="active">Steering Committee</a></li>
+    <li><a href="educational-material.html">Educational Material</a></li>
+  </ul>
+</nav>
+
+<!-- ═══════════════ HEADER ═══════════════ -->
+<header>
+  <div class="header-inner">
+    <span class="header-label">International Working Group</span>
+    <h1>Steering Committee</h1>
+    <p class="subtitle">The lead researchers behind the IWG 2024 recommendation on Alzheimer Disease — published online November 1, 2024 · JAMA Neurol. 81(12):1304–1311</p>
+  </div>
+</header>
+
+<!-- ═══════════════ MAIN ═══════════════ -->
+<main>
+
+  <h2><span class="icon">👥</span> Lead Members</h2>
+  <p class="section-intro">
+    Four senior investigators led the drafting and coordination of the IWG 2024 consensus paper, bringing together expertise in clinical neurology, neuroimaging, biomarkers, genetics, and clinical trial design.
+  </p>
+
+  <div class="members-grid">
+
+    <!-- Bruno Dubois -->
+    <div class="member-card">
+      <div class="member-card-top">
+        <div class="avatar">BD</div>
+        <div class="member-meta">
+          <div class="role-badge">Lead Author &amp; Chair</div>
+          <h3>Bruno Dubois</h3>
+          <div class="institution">Institut de la Mémoire et de la Maladie d'Alzheimer (IM2A)</div>
+          <div class="location">Pitié-Salpêtrière Hospital · Sorbonne Université, Paris, France</div>
+        </div>
+      </div>
+      <div class="member-card-body">
+        <p>
+          Professor Bruno Dubois is one of the world's foremost authorities on Alzheimer disease diagnosis and early detection. He founded and has led the IM2A — a national reference center for memory disorders — for over two decades. He is the architect of the IWG diagnostic criteria, first published in 2007 and updated in 2010, 2014, and 2024.
+        </p>
+        <p>
+          His work fundamentally reframed the prodromal phase of AD, establishing the "hippocampal amnestic syndrome" as a core clinical marker. He has authored over 500 peer-reviewed publications and received numerous international awards including the AAIC Lifetime Achievement Award.
+        </p>
+        <div class="expertise-tags">
+          <span class="tag">IWG Criteria</span>
+          <span class="tag">Early Diagnosis</span>
+          <span class="tag">Memory Disorders</span>
+          <span class="tag">Prodromal AD</span>
+          <span class="tag">Clinical Neurology</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Nicolas Villain -->
+    <div class="member-card">
+      <div class="member-card-top">
+        <div class="avatar">NV</div>
+        <div class="member-meta">
+          <div class="role-badge">Co-Lead Author</div>
+          <h3>Nicolas Villain</h3>
+          <div class="institution">Institut de la Mémoire et de la Maladie d'Alzheimer (IM2A)</div>
+          <div class="location">Pitié-Salpêtrière Hospital · Sorbonne Université, Paris, France</div>
+        </div>
+      </div>
+      <div class="member-card-body">
+        <p>
+          Professor Nicolas Villain is a neurologist and researcher at IM2A, specializing in the cognitive neuroscience of aging and Alzheimer disease. His work bridges clinical phenotyping with advanced neuroimaging — particularly PET imaging of amyloid and tau — and the interpretation of biomarker results in real-world patient care.
+        </p>
+        <p>
+          He has led studies on the natural history of presymptomatic AD, the limits of biomarker-based prediction, and the clinical translation of imaging findings. He is co-first author of the 2024 JAMA Neurology paper alongside Dubois.
+        </p>
+        <div class="expertise-tags">
+          <span class="tag">Neuroimaging</span>
+          <span class="tag">PET Biomarkers</span>
+          <span class="tag">Natural History</span>
+          <span class="tag">Cognitive Aging</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Howard Feldman -->
+    <div class="member-card">
+      <div class="member-card-top">
+        <div class="avatar">HF</div>
+        <div class="member-meta">
+          <div class="role-badge">Senior Author</div>
+          <h3>Howard Feldman</h3>
+          <div class="institution">Alzheimer's Disease Cooperative Study (ADCS)</div>
+          <div class="location">UC San Diego School of Medicine, San Diego, USA</div>
+        </div>
+      </div>
+      <div class="member-card-body">
+        <p>
+          Professor Howard Feldman is Director of the Alzheimer's Disease Cooperative Study (ADCS) and Professor of Neurosciences at UC San Diego. He is a leading expert in Alzheimer clinical trials, disease-modifying therapies, and the translation of biomarker science into clinical practice.
+        </p>
+        <p>
+          His work has shaped the design of major AD treatment trials across North America and internationally. He has been a prominent voice on the appropriate use of diagnostic criteria in research and clinical settings, and is a longtime contributor to the IWG framework discussions.
+        </p>
+        <div class="expertise-tags">
+          <span class="tag">Clinical Trials</span>
+          <span class="tag">ADCS</span>
+          <span class="tag">Disease-Modifying Therapies</span>
+          <span class="tag">Biomarker Translation</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Giovanni B. Frisoni -->
+    <div class="member-card">
+      <div class="member-card-top">
+        <div class="avatar">GF</div>
+        <div class="member-meta">
+          <div class="role-badge">Senior Author</div>
+          <h3>Giovanni B. Frisoni</h3>
+          <div class="institution">Memory Center, Geneva University Hospitals (HUG)</div>
+          <div class="location">University of Geneva, Geneva, Switzerland</div>
+        </div>
+      </div>
+      <div class="member-card-body">
+        <p>
+          Professor Giovanni B. Frisoni is Director of the Memory Center at Geneva University Hospitals and a leading expert in quantitative neuroimaging and biomarker-based diagnostics in dementia. His research focuses on the development and validation of imaging markers — MRI, FDG-PET, and amyloid PET — for early and accurate diagnosis.
+        </p>
+        <p>
+          He has led multiple large-scale European consortia on AD biomarker harmonization and developed standardized protocols adopted across centers worldwide. He is a co-author of the original 2007 IWG criteria.
+        </p>
+        <div class="expertise-tags">
+          <span class="tag">Neuroimaging</span>
+          <span class="tag">MRI / FDG-PET</span>
+          <span class="tag">Biomarker Harmonization</span>
+          <span class="tag">European Consortia</span>
+        </div>
+      </div>
+    </div>
+
+
+  </div>
+
+  <div class="highlight">
+    <strong>About the IWG:</strong> The International Working Group on Alzheimer Disease was founded in 2004 and has since brought together 46 clinicians and researchers from 20+ countries. Its role is to provide independent, evidence-based recommendations on Alzheimer diagnosis and classification — distinct from and complementary to national guidelines.
+  </div>
+
+
+</main>
+
+<!-- ═══════════════ FOOTER ═══════════════ -->
+<footer>
+  <strong>International Working Group on Alzheimer Disease</strong><br>
+  Dubois B, Villain N, Schneider L, Fox N, et al. — <em>JAMA Neurology.</em> 2024;81(12):1304–1311 · doi:10.1001/jamaneurol.2024.3770
+</footer>
+
+</body>
+</html>
