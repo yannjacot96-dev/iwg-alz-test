@@ -392,8 +392,7 @@
 
       <!-- Language filters -->
       <div class="lang-filters">
-        <button class="lang-btn active" onclick="filterLang('all', this)"><span class="flag">🌐</span> All</button>
-        <button class="lang-btn" onclick="filterLang('english', this)"><span class="flag">🇬🇧</span> English</button>
+        <button class="lang-btn active" onclick="filterLang('english', this)"><span class="flag">🇬🇧</span> English</button>
         <button class="lang-btn" onclick="filterLang('french', this)"><span class="flag">🇫🇷</span> French</button>
         <button class="lang-btn" onclick="filterLang('german', this)"><span class="flag">🇩🇪</span> German</button>
         <button class="lang-btn" onclick="filterLang('italian', this)"><span class="flag">🇮🇹</span> Italian</button>
@@ -562,7 +561,7 @@
         const cards = document.querySelectorAll('#video-grid .video-card');
         let visible = 0;
         cards.forEach(card => {
-          if (lang === 'all' || card.dataset.lang === lang) {
+          if (card.dataset.lang === lang) {
             card.style.display = '';
             visible++;
           } else {
@@ -581,6 +580,12 @@
           document.getElementById('video-grid').appendChild(msg);
         }
       }
+
+      // Init: show English by default on page load
+      document.addEventListener('DOMContentLoaded', function() {
+        const firstBtn = document.querySelector('.lang-btn');
+        filterLang('english', firstBtn);
+      });
     </script>
 
     <!-- ── DOCUMENTS ── -->
