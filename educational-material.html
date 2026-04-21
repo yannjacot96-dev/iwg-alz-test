@@ -290,6 +290,48 @@
       font-size: 0.82rem;
     }
 
+    /* ── LANGUAGE FILTERS ── */
+    .lang-filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 32px;
+    }
+    .lang-btn {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      padding: 8px 18px;
+      border-radius: 20px;
+      border: 1px solid var(--border);
+      background: var(--white);
+      color: var(--muted);
+      font-size: 0.85rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .lang-btn:hover {
+      border-color: var(--blue);
+      color: var(--blue);
+    }
+    .lang-btn.active {
+      background: var(--blue);
+      border-color: var(--blue);
+      color: var(--white);
+    }
+    .lang-btn .flag { font-size: 1rem; }
+    .no-videos {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 48px 24px;
+      color: var(--muted);
+      font-size: 0.95rem;
+      background: var(--white);
+      border: 1px dashed var(--border);
+      border-radius: 14px;
+    }
+
     /* ── COMING SOON BADGE ── */
     .coming-soon {
       display: inline-block;
@@ -346,13 +388,24 @@
     <!-- ── VIDEOS ── -->
     <section id="videos">
       <h2><span class="icon">▶</span> Videos</h2>
-      <p class="section-intro">Presentations and interviews from IWG members explaining the 2024 framework, available in multiple languages.</p>
+      <p class="section-intro">Presentations and interviews from IWG members explaining the 2024 framework. Select a language to filter.</p>
 
-      <div class="video-grid">
+      <!-- Language filters -->
+      <div class="lang-filters">
+        <button class="lang-btn active" onclick="filterLang('all', this)"><span class="flag">🌐</span> All</button>
+        <button class="lang-btn" onclick="filterLang('english', this)"><span class="flag">🇬🇧</span> English</button>
+        <button class="lang-btn" onclick="filterLang('french', this)"><span class="flag">🇫🇷</span> French</button>
+        <button class="lang-btn" onclick="filterLang('german', this)"><span class="flag">🇩🇪</span> German</button>
+        <button class="lang-btn" onclick="filterLang('italian', this)"><span class="flag">🇮🇹</span> Italian</button>
+        <button class="lang-btn" onclick="filterLang('spanish', this)"><span class="flag">🇪🇸</span> Spanish</button>
+        <button class="lang-btn" onclick="filterLang('chinese', this)"><span class="flag">🇨🇳</span> Chinese</button>
+        <button class="lang-btn" onclick="filterLang('russian', this)"><span class="flag">🇷🇺</span> Russian</button>
+      </div>
 
-        <!-- Video 1 — placeholder -->
-        <!-- Video 1 — English / Frisoni -->
-        <div class="video-card">
+      <div class="video-grid" id="video-grid">
+
+        <!-- English / Frisoni -->
+        <div class="video-card" data-lang="english">
           <div class="video-thumb">
             <iframe
               src="https://www.youtube.com/embed/IHi41dLYQ7M"
@@ -365,37 +418,14 @@
             <h3>IWG 2024 Framework — Overview</h3>
             <p>Prof. Giovanni B. Frisoni presents the IWG 2024 Framework and the new diagnostic lexicon.</p>
             <div class="video-meta">
-              <span>🌐 English</span>
+              <span>🇬🇧 English</span>
               <span class="tag">Overview</span>
             </div>
           </div>
         </div>
 
-        <!-- Video 2 — placeholder -->
-        <div class="video-card">
-          <div class="video-thumb">
-            <div class="video-placeholder">
-              <div class="play-btn">
-                <svg width="20" height="20" viewBox="0 0 20 20" fill="white">
-                  <polygon points="6,3 18,10 6,17"/>
-                </svg>
-              </div>
-              <span class="label">Video coming soon</span>
-              <span class="lang-badge">French</span>
-            </div>
-          </div>
-          <div class="video-body">
-            <h3>Le cadre IWG 2024 — Présentation</h3>
-            <p>Prof. Nicolas Villain présente les recommandations IWG 2024 et leur impact sur la pratique clinique.</p>
-            <div class="video-meta">
-              <span>🕐 Duration TBC</span>
-              <span class="tag">Overview</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Video 3 — German / Frisoni -->
-        <div class="video-card">
+        <!-- German / Frisoni -->
+        <div class="video-card" data-lang="german">
           <div class="video-thumb">
             <iframe
               src="https://www.youtube.com/embed/L1aWIPwLOG0"
@@ -408,30 +438,112 @@
             <h3>Das IWG 2024 Framework — Präsentation</h3>
             <p>Prof. Giovanni B. Frisoni stellt das IWG 2024 Framework und das neue diagnostische Lexikon vor.</p>
             <div class="video-meta">
-              <span>🌐 German</span>
+              <span>🇩🇪 German</span>
               <span class="tag">Overview</span>
             </div>
           </div>
         </div>
 
-        <!-- Video 4 — placeholder -->
-        <div class="video-card">
+        <!-- French / placeholder -->
+        <div class="video-card" data-lang="french">
           <div class="video-thumb">
             <div class="video-placeholder">
               <div class="play-btn">
-                <svg width="20" height="20" viewBox="0 0 20 20" fill="white">
-                  <polygon points="6,3 18,10 6,17"/>
-                </svg>
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="white"><polygon points="6,3 18,10 6,17"/></svg>
               </div>
               <span class="label">Video coming soon</span>
-              <span class="lang-badge">Chinese</span>
+              <span class="lang-badge">🇫🇷 French</span>
+            </div>
+          </div>
+          <div class="video-body">
+            <h3>Le cadre IWG 2024 — Présentation</h3>
+            <p>Prof. Nicolas Villain présente les recommandations IWG 2024 et leur impact sur la pratique clinique.</p>
+            <div class="video-meta">
+              <span>🇫🇷 French</span>
+              <span class="tag">Overview</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Italian / placeholder -->
+        <div class="video-card" data-lang="italian">
+          <div class="video-thumb">
+            <div class="video-placeholder">
+              <div class="play-btn">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="white"><polygon points="6,3 18,10 6,17"/></svg>
+              </div>
+              <span class="label">Video coming soon</span>
+              <span class="lang-badge">🇮🇹 Italian</span>
+            </div>
+          </div>
+          <div class="video-body">
+            <h3>Il framework IWG 2024 — Panoramica</h3>
+            <p>Prof. Giovanni B. Frisoni presenta il framework IWG 2024 e il nuovo lessico diagnostico.</p>
+            <div class="video-meta">
+              <span>🇮🇹 Italian</span>
+              <span class="tag">Overview</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Spanish / placeholder -->
+        <div class="video-card" data-lang="spanish">
+          <div class="video-thumb">
+            <div class="video-placeholder">
+              <div class="play-btn">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="white"><polygon points="6,3 18,10 6,17"/></svg>
+              </div>
+              <span class="label">Video coming soon</span>
+              <span class="lang-badge">🇪🇸 Spanish</span>
+            </div>
+          </div>
+          <div class="video-body">
+            <h3>El marco IWG 2024 — Presentación</h3>
+            <p>Presentación del marco IWG 2024 y el nuevo léxico diagnóstico para la comunidad hispanohablante.</p>
+            <div class="video-meta">
+              <span>🇪🇸 Spanish</span>
+              <span class="tag">Overview</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Chinese / placeholder -->
+        <div class="video-card" data-lang="chinese">
+          <div class="video-thumb">
+            <div class="video-placeholder">
+              <div class="play-btn">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="white"><polygon points="6,3 18,10 6,17"/></svg>
+              </div>
+              <span class="label">Video coming soon</span>
+              <span class="lang-badge">🇨🇳 Chinese</span>
             </div>
           </div>
           <div class="video-body">
             <h3>IWG 2024 框架概述</h3>
             <p>Prof. Howard Feldman presents the IWG 2024 recommendations for the Chinese-speaking scientific community.</p>
             <div class="video-meta">
-              <span>🕐 Duration TBC</span>
+              <span>🇨🇳 Chinese</span>
+              <span class="tag">Overview</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Russian / placeholder -->
+        <div class="video-card" data-lang="russian">
+          <div class="video-thumb">
+            <div class="video-placeholder">
+              <div class="play-btn">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="white"><polygon points="6,3 18,10 6,17"/></svg>
+              </div>
+              <span class="label">Video coming soon</span>
+              <span class="lang-badge">🇷🇺 Russian</span>
+            </div>
+          </div>
+          <div class="video-body">
+            <h3>Обзор концепции IWG 2024</h3>
+            <p>Presentation of the IWG 2024 Framework for the Russian-speaking scientific community.</p>
+            <div class="video-meta">
+              <span>🇷🇺 Russian</span>
               <span class="tag">Overview</span>
             </div>
           </div>
@@ -439,6 +551,37 @@
 
       </div>
     </section>
+
+    <script>
+      function filterLang(lang, btn) {
+        // Update active button
+        document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+
+        // Show/hide cards
+        const cards = document.querySelectorAll('#video-grid .video-card');
+        let visible = 0;
+        cards.forEach(card => {
+          if (lang === 'all' || card.dataset.lang === lang) {
+            card.style.display = '';
+            visible++;
+          } else {
+            card.style.display = 'none';
+          }
+        });
+
+        // Show "no videos" message if none visible
+        const existing = document.getElementById('no-videos-msg');
+        if (existing) existing.remove();
+        if (visible === 0) {
+          const msg = document.createElement('div');
+          msg.id = 'no-videos-msg';
+          msg.className = 'no-videos';
+          msg.textContent = 'No videos available in this language yet.';
+          document.getElementById('video-grid').appendChild(msg);
+        }
+      }
+    </script>
 
     <!-- ── DOCUMENTS ── -->
     <section id="documents">
