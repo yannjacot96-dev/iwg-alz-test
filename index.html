@@ -296,8 +296,35 @@
       font-size: 0.85rem;
       font-weight: 600;
       text-decoration: none;
+      position: relative;
     }
     .pub-link:hover { text-decoration: underline; }
+    .pub-link .tooltip {
+      display: none;
+      position: absolute;
+      bottom: calc(100% + 8px);
+      left: 50%;
+      transform: translateX(-50%);
+      background: #1a1a1a;
+      color: #fff;
+      font-size: 0.75rem;
+      font-weight: 400;
+      padding: 6px 10px;
+      border-radius: 6px;
+      white-space: nowrap;
+      pointer-events: none;
+      z-index: 10;
+    }
+    .pub-link .tooltip::after {
+      content: '';
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      border: 5px solid transparent;
+      border-top-color: #1a1a1a;
+    }
+    .pub-link:hover .tooltip { display: block; }
 
     /* ── PARTNERS ── */
     .partners-grid {
@@ -480,7 +507,8 @@
             In response to the 2024 Alzheimer Association criteria, which define AD as a purely biological entity, the IWG reaffirms that a diagnosis of Alzheimer disease requires both a recognised clinical phenotype and supportive biomarker evidence. The paper introduces a three-tier lexicon — At-Risk, Presymptomatic AD, and Alzheimer Disease — and provides four key recommendations for clinical practice, research, and public health.
           </p>
           <a href="framework.html" class="pub-link">Read the full framework on this site →</a>
-          <a href="https://doi.org/10.1001/jamaneurol.2024.3770" class="pub-link" target="_blank" style="margin-left: 20px;">View on JAMA Neurology →</a>
+          <a href="https://doi.org/10.1001/jamaneurol.2024.3770" class="pub-link" target="_blank" style="margin-left: 20px;">View on JAMA Neurology →<span class="tooltip">Original version of the paper — requires a journal account</span></a>
+          <a href="nihms-2071492%20(1).pdf" class="pub-link" target="_blank" style="margin-left: 20px;">⬇ Download NIHMS version →</a>
         </div>
       </div>
     </section>
