@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>IWG — History of the Criteria</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --blue:       #C41230;
+      --blue-light: #e8354a;
+      --blue-pale:  #fce8ec;
+      --accent:     #8B0018;
+      --text:       #1a1a1a;
+      --muted:      #6b6b6b;
+      --border:     #e8dede;
+      --white:      #ffffff;
+      --bg:         #f8f6f6;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+    }
+
+    /* ── NAV ── */
+    nav {
+      background: var(--white);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    nav ul {
+      display: flex;
+      justify-content: center;
+      gap: 0;
+      list-style: none;
+      max-width: 900px;
+      margin: 0 auto;
+      overflow-x: auto;
+    }
+    nav a {
+      display: block;
+      padding: 14px 18px;
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 500;
+      white-space: nowrap;
+      transition: color 0.2s, border-bottom 0.2s;
+      border-bottom: 3px solid transparent;
+    }
+    nav a:hover  { color: var(--blue); border-bottom-color: var(--blue); }
+    nav a.active { color: var(--blue); border-bottom-color: var(--blue); }
+
+    /* ── HEADER ── */
+    header {
+      background: var(--white);
+      border-bottom: 3px solid var(--blue);
+      padding: 40px 24px 32px;
+    }
+    .header-inner {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    .header-label {
+      display: inline-block;
+      background: var(--blue-pale);
+      color: var(--blue);
+      border-radius: 20px;
+      padding: 4px 14px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+    header h1 {
+      font-size: clamp(1.6rem, 4vw, 2.4rem);
+      font-weight: 700;
+      line-height: 1.2;
+      color: var(--blue);
+      margin-bottom: 10px;
+    }
+    header p.subtitle {
+      font-size: 1rem;
+      color: var(--muted);
+      max-width: 640px;
+    }
+
+    /* ── LAYOUT ── */
+    main {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 56px 24px 80px;
+    }
+
+    /* ── INTRO HIGHLIGHT ── */
+    .intro-highlight {
+      background: var(--blue-pale);
+      border-left: 4px solid var(--blue);
+      border-radius: 0 8px 8px 0;
+      padding: 20px 24px;
+      margin-bottom: 56px;
+      font-size: 0.95rem;
+      color: var(--text);
+    }
+    .intro-highlight strong { color: var(--blue); }
+
+    /* ── TIMELINE WRAPPER ── */
+    .timeline {
+      position: relative;
+      padding-left: 56px;
+    }
+
+    /* vertical line */
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 20px;
+      top: 8px;
+      bottom: 8px;
+      width: 3px;
+      background: linear-gradient(to bottom, var(--blue) 0%, #e8b0b8 100%);
+      border-radius: 2px;
+    }
+
+    /* ── TIMELINE ITEM ── */
+    .tl-item {
+      position: relative;
+      margin-bottom: 40px;
+    }
+    .tl-item:last-child { margin-bottom: 0; }
+
+    /* dot on the line */
+    .tl-dot {
+      position: absolute;
+      left: -44px;
+      top: 20px;
+      width: 18px;
+      height: 18px;
+      background: var(--white);
+      border: 3px solid var(--blue);
+      border-radius: 50%;
+      z-index: 1;
+      transition: background 0.2s;
+    }
+    .tl-item:hover .tl-dot {
+      background: var(--blue);
+    }
+
+    /* ── CARD ── */
+    .tl-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+      transition: box-shadow 0.2s, transform 0.2s;
+    }
+    .tl-card:hover {
+      box-shadow: 0 6px 24px rgba(196, 18, 48, 0.10);
+      transform: translateY(-2px);
+    }
+
+    .tl-card-header {
+      background: linear-gradient(135deg, var(--blue-pale) 0%, #f5c0c8 100%);
+      padding: 20px 24px 16px;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .tl-year {
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--blue);
+      line-height: 1;
+      letter-spacing: -1px;
+      flex-shrink: 0;
+    }
+
+    .tl-meta {
+      flex: 1;
+      min-width: 0;
+    }
+    .tl-badge {
+      display: inline-block;
+      background: var(--blue);
+      color: var(--white);
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      padding: 2px 10px;
+      border-radius: 20px;
+      margin-bottom: 6px;
+    }
+    .tl-title {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--text);
+      line-height: 1.35;
+      margin-bottom: 4px;
+    }
+    .tl-journal {
+      font-size: 0.82rem;
+      color: var(--blue-light);
+      font-style: italic;
+      font-weight: 500;
+    }
+
+    .tl-card-body {
+      padding: 20px 24px 22px;
+    }
+
+    .tl-section-label {
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--blue);
+      margin-bottom: 6px;
+      margin-top: 14px;
+    }
+    .tl-section-label:first-child { margin-top: 0; }
+
+    .tl-card-body p {
+      font-size: 0.88rem;
+      color: var(--text);
+      line-height: 1.65;
+      margin-bottom: 0;
+    }
+
+    /* key contributions as tags */
+    .tl-contributions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 8px;
+    }
+    .tl-tag {
+      background: var(--blue-pale);
+      color: var(--blue);
+      font-size: 0.75rem;
+      font-weight: 500;
+      padding: 3px 10px;
+      border-radius: 20px;
+      border: 1px solid #e0b0b8;
+    }
+
+    /* link row */
+    .tl-links {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 18px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border);
+      align-items: center;
+    }
+    .tl-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--blue);
+      text-decoration: none;
+      padding: 5px 14px;
+      border: 1.5px solid var(--blue);
+      border-radius: 20px;
+      transition: background 0.2s, color 0.2s;
+    }
+    .tl-link:hover {
+      background: var(--blue);
+      color: var(--white);
+    }
+    .tl-link.filled {
+      background: var(--blue);
+      color: var(--white);
+    }
+    .tl-link.filled:hover {
+      background: var(--accent);
+      border-color: var(--accent);
+    }
+
+    /* ── MILESTONE CONNECTOR ── */
+    .tl-connector {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: -20px 0 20px -44px;
+      padding-left: 44px;
+    }
+    .tl-connector-line {
+      height: 2px;
+      background: var(--border);
+      flex: 1;
+      max-width: 80px;
+    }
+    .tl-connector-text {
+      font-size: 0.75rem;
+      color: var(--muted);
+      font-style: italic;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--blue);
+      color: rgba(255,255,255,0.7);
+      text-align: center;
+      padding: 32px 24px;
+      font-size: 0.85rem;
+      margin-top: 40px;
+    }
+    footer strong { color: var(--white); }
+
+    /* ── BACK TO TOP BUTTON ── */
+    .back-to-top {
+      position: fixed;
+      bottom: 28px;
+      right: 28px;
+      width: 46px;
+      height: 46px;
+      background: var(--blue);
+      color: var(--white);
+      border: none;
+      border-radius: 50%;
+      font-size: 1.2rem;
+      font-weight: 700;
+      cursor: pointer;
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(8px);
+      transition: opacity 0.25s, visibility 0.25s, transform 0.25s, background 0.2s;
+      box-shadow: 0 4px 14px rgba(196, 18, 48, 0.3);
+      z-index: 60;
+    }
+    .back-to-top.visible {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+    .back-to-top:hover {
+      background: var(--accent);
+      transform: translateY(-3px);
+    }
+    @media (max-width: 640px) {
+      .back-to-top { bottom: 18px; right: 18px; width: 42px; height: 42px; }
+    }
+
+    @media (max-width: 640px) {
+      nav a { padding: 12px 10px; font-size: 0.78rem; }
+      .timeline { padding-left: 40px; }
+      .tl-dot { left: -30px; }
+      .timeline::before { left: 14px; }
+      .tl-connector { margin-left: -30px; padding-left: 30px; }
+      .tl-card-header { flex-direction: column; gap: 8px; }
+      .tl-year { font-size: 1.6rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════════ NAVIGATION ═══════════════ -->
+<nav>
+  <ul>
+    <li><a href="index.html" class="active">Home</a></li>
+    <li><a href="framework.html">Framework</a></li>
+    <li><a href="decision-card.html">IWG Diagnosis Recommended Algorithm</a></li>
+    <li><a href="steering-committee.html">Steering Committee</a></li>
+    <li><a href="educational-material.html">Educational Material</a></li>
+  </ul>
+</nav>
+
+<!-- ═══════════════ HEADER ═══════════════ -->
+<header>
+  <div class="header-inner">
+    <a href="index.html" style="display:inline-flex; align-items:center; gap:6px; color:var(--muted); text-decoration:none; font-size:0.82rem; font-weight:500; margin-bottom:10px; transition: color 0.15s;" onmouseover="this.style.color='var(--blue)'" onmouseout="this.style.color='var(--muted)'">← Back to Home</a>
+    <span class="header-label">International Working Group</span>
+    <h1>History of the IWG Criteria</h1>
+    <p class="subtitle">17 years of evolving research — from the revision of NINCDS–ADRDA in 2007 to the clinical-biological construct of 2024.</p>
+  </div>
+</header>
+
+<!-- ═══════════════ MAIN ═══════════════ -->
+<main>
+
+  <div class="intro-highlight">
+    The IWG has published six major position papers since 2007, progressively refining the diagnostic framework for Alzheimer disease. The central thread: anchoring diagnosis to a <strong>clinical-biological construct</strong> — resisting the reduction of the disease to its biomarkers alone.
+  </div>
+
+  <div class="timeline">
+
+    <!-- ════════ 2007 ════════ -->
+    <div class="tl-item">
+      <div class="tl-dot"></div>
+      <div class="tl-card">
+        <div class="tl-card-header">
+          <div class="tl-year">2007</div>
+          <div class="tl-meta">
+            <span class="tl-badge">IWG-1 · Founding Paper</span>
+            <div class="tl-title">Research criteria for the diagnosis of Alzheimer's disease: revising the NINCDS–ADRDA criteria</div>
+            <div class="tl-journal">Lancet Neurology · Vol. 6 · August 2007 · pp. 734–746</div>
+          </div>
+        </div>
+        <div class="tl-card-body">
+          <div class="tl-section-label">Context</div>
+          <p>The 1984 NINCDS–ADRDA criteria required dementia and post-mortem confirmation. They could no longer account for the unprecedented growth in biomarker science. An international group convened in 2005 to propose a new framework.</p>
+
+          <div class="tl-section-label">Key Contributions</div>
+          <div class="tl-contributions">
+            <span class="tl-tag">First clinical-biological framework</span>
+            <span class="tl-tag">Diagnosis without dementia</span>
+            <span class="tl-tag">Hippocampal amnestic syndrome as core criterion</span>
+            <span class="tl-tag">Biomarkers as supportive evidence</span>
+            <span class="tl-tag">Prodromal AD concept</span>
+          </div>
+
+          <div class="tl-section-label">Scientific Advance</div>
+          <p>For the first time, AD could be diagnosed <em>in vivo</em> at the prodromal (pre-dementia) stage. The framework required a core clinical criterion — an episodic memory deficit of the hippocampal type (impaired free recall not corrected by cueing) — supported by at least one biomarker: MRI, FDG-PET, CSF, or amyloid PET.</p>
+
+          <div class="tl-links">
+            <a class="tl-link filled" href="227- Research criteria...NINCDS-ADRDA_dubois_lancet_2007.pdf" download>⬇ Download PDF</a>
+            <a class="tl-link" href="https://doi.org/10.1016/S1474-4422(07)70178-3" target="_blank">View on Lancet →</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ════════ 2010 ════════ -->
+    <div class="tl-item">
+      <div class="tl-dot"></div>
+      <div class="tl-card">
+        <div class="tl-card-header">
+          <div class="tl-year">2010</div>
+          <div class="tl-meta">
+            <span class="tl-badge">IWG Lexicon</span>
+            <div class="tl-title">Revising the definition of Alzheimer's disease: a new lexicon</div>
+            <div class="tl-journal">Lancet Neurology · Published online October 11, 2010</div>
+          </div>
+        </div>
+        <div class="tl-card-body">
+          <div class="tl-section-label">Context</div>
+          <p>The 2007 framework created a conceptual ambiguity: did "Alzheimer's disease" refer to the clinical entity or the underlying neuropathology? A shared vocabulary was needed for both research and clinical communities.</p>
+
+          <div class="tl-section-label">Key Contributions</div>
+          <div class="tl-contributions">
+            <span class="tl-tag">AD vs Alzheimer's pathology distinguished</span>
+            <span class="tl-tag">Asymptomatic at-risk state</span>
+            <span class="tl-tag">Presymptomatic AD (monogenic)</span>
+            <span class="tl-tag">Typical vs atypical AD</span>
+            <span class="tl-tag">Mixed AD defined</span>
+          </div>
+
+          <div class="tl-section-label">Scientific Advance</div>
+          <p><strong>Alzheimer's disease</strong> was redefined as a purely clinical entity — symptomatic individuals with a specific phenotype and in vivo biological evidence. <strong>Alzheimer's pathology</strong> was separated as the neuropathological process, which may exist without clinical expression. This distinction would become the cornerstone of the 2021 and 2024 IWG position against purely biological diagnosis.</p>
+
+          <div class="tl-links">
+            <a class="tl-link filled" href="Lexicon_AD_Dubois_2010.pdf" download>⬇ Download PDF</a>
+            <a class="tl-link" href="https://doi.org/10.1016/S1474-4422(10)70223-4" target="_blank">View on Lancet →</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ════════ 2014 ════════ -->
+    <div class="tl-item">
+      <div class="tl-dot"></div>
+      <div class="tl-card">
+        <div class="tl-card-header">
+          <div class="tl-year">2014</div>
+          <div class="tl-meta">
+            <span class="tl-badge">IWG-2 · Major Revision</span>
+            <div class="tl-title">Advancing research diagnostic criteria for Alzheimer's disease: the IWG-2 criteria</div>
+            <div class="tl-journal">Lancet Neurology · Vol. 13 · June 2014 · pp. 614–629</div>
+          </div>
+        </div>
+        <div class="tl-card-body">
+          <div class="tl-section-label">Context</div>
+          <p>Eight years of accumulated evidence on biomarkers and clinical phenotyping called for a refined framework. The IWG-2 incorporated new data on CSF, amyloid PET, tau PET, and neuroimaging, and extended the criteria to atypical forms and preclinical states.</p>
+
+          <div class="tl-section-label">Key Contributions</div>
+          <div class="tl-contributions">
+            <span class="tl-tag">Pathophysiological vs topographical biomarkers</span>
+            <span class="tl-tag">FCSRT validated as core test</span>
+            <span class="tl-tag">Atypical AD formally included</span>
+            <span class="tl-tag">Logopenic aphasia · PCA · Frontal variant</span>
+            <span class="tl-tag">Preclinical states refined</span>
+            <span class="tl-tag">Mixed AD criteria</span>
+          </div>
+
+          <div class="tl-section-label">Scientific Advance</div>
+          <p>Biomarkers were reclassified: <em>pathophysiological</em> markers (CSF Aβ42, tau, p-tau; amyloid PET) directly indicate Alzheimer's pathology and anchor the diagnosis; <em>topographical</em> markers (MRI, FDG-PET) reflect downstream neurodegeneration and are better suited to measuring disease progression. The FCSRT was confirmed as the gold-standard memory test, with ~92% specificity for identifying prodromal AD.</p>
+
+          <div class="tl-links">
+            <a class="tl-link filled" href="IWG-2.FINAL.pdf" download>⬇ Download PDF</a>
+            <a class="tl-link" href="https://doi.org/10.1016/S1474-4422(14)70090-0" target="_blank">View on Lancet →</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ════════ 2016 ════════ -->
+    <div class="tl-item">
+      <div class="tl-dot"></div>
+      <div class="tl-card">
+        <div class="tl-card-header">
+          <div class="tl-year">2016</div>
+          <div class="tl-meta">
+            <span class="tl-badge">Preclinical AD · Comprehensive Review</span>
+            <div class="tl-title">Preclinical Alzheimer's disease: Definition, natural history, and diagnostic criteria</div>
+            <div class="tl-journal">Alzheimer's &amp; Dementia · Vol. 12 · 2016 · pp. 292–323</div>
+          </div>
+        </div>
+        <div class="tl-card-body">
+          <div class="tl-section-label">Context</div>
+          <p>Issued from a joint IWG / Alzheimer's Association meeting (Washington DC, July 2015). As biomarker accessibility expanded, a rigorous and unified definition of the preclinical stage had become urgently needed — along with a frank discussion of its ethical implications.</p>
+
+          <div class="tl-section-label">Key Contributions</div>
+          <div class="tl-contributions">
+            <span class="tl-tag">Preclinical stage rigorously defined</span>
+            <span class="tl-tag">Asymptomatic A+ vs presymptomatic</span>
+            <span class="tl-tag">Low individual predictive accuracy</span>
+            <span class="tl-tag">Ethical consequences addressed</span>
+            <span class="tl-tag">Blood biomarkers reviewed</span>
+          </div>
+
+          <div class="tl-section-label">Scientific Advance</div>
+          <p>The paper demonstrated that the majority of cognitively normal amyloid-positive individuals will <em>not</em> develop symptoms in their lifetime. Binary biomarker thresholds are inherently artificial. Individual risk stratification is not yet clinically actionable. This landmark paper directly anticipated the arguments of the 2021 and 2024 IWG papers against purely biological diagnosis.</p>
+
+          <div class="tl-links">
+            <a class="tl-link filled" href="2016_Preclinical AD_Dubois .pdf" download>⬇ Download PDF</a>
+            <a class="tl-link" href="https://doi.org/10.1016/j.jalz.2016.02.002" target="_blank">View on Alzheimer's &amp; Dementia →</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ════════ 2021 ════════ -->
+    <div class="tl-item">
+      <div class="tl-dot"></div>
+      <div class="tl-card">
+        <div class="tl-card-header">
+          <div class="tl-year">2021</div>
+          <div class="tl-meta">
+            <span class="tl-badge">IWG 2021 · Clinical Diagnosis</span>
+            <div class="tl-title">Clinical diagnosis of Alzheimer's disease: recommendations of the International Working Group</div>
+            <div class="tl-journal">Lancet Neurology · Published online April 29, 2021</div>
+          </div>
+        </div>
+        <div class="tl-card-body">
+          <div class="tl-section-label">Context</div>
+          <p>In 2018, the NIA–AA proposed a purely biological definition of AD based on biomarker status alone, with no clinical requirement. The IWG responded with a detailed critique of this approach and concrete recommendations for clinical practice.</p>
+
+          <div class="tl-section-label">Key Contributions</div>
+          <div class="tl-contributions">
+            <span class="tl-tag">Against purely biological diagnosis</span>
+            <span class="tl-tag">Biomarkers: low individual predictive value</span>
+            <span class="tl-tag">Copathology problem highlighted</span>
+            <span class="tl-tag">Asymptomatic individuals = at-risk, not diseased</span>
+            <span class="tl-tag">Comprehensive comparison table 1984–2021</span>
+          </div>
+
+          <div class="tl-section-label">Scientific Advance</div>
+          <p>The IWG demonstrated three critical limitations of a purely biological definition: (1) the lifetime risk of AD dementia in an amyloid-positive 65-year-old man is only ~22% — the majority will remain asymptomatic; (2) copathologies (Lewy bodies, TDP-43, vascular) are the rule, not the exception, confounding biomarker interpretation; (3) binary biomarker thresholds are arbitrary and do not map onto disease reality. The diagnosis of AD must remain restricted to symptomatic individuals.</p>
+
+          <div class="tl-links">
+            <a class="tl-link filled" href="Dubois 2021.pdf" download>⬇ Download PDF</a>
+            <a class="tl-link" href="https://doi.org/10.1016/S1474-4422(21)00066-1" target="_blank">View on Lancet →</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ════════ 2024 ════════ -->
+    <div class="tl-item">
+      <div class="tl-dot"></div>
+      <div class="tl-card">
+        <div class="tl-card-header">
+          <div class="tl-year">2024</div>
+          <div class="tl-meta">
+            <span class="tl-badge">IWG 2024 · Current Framework</span>
+            <div class="tl-title">Alzheimer Disease as a Clinical-Biological Construct — An International Working Group Recommendation</div>
+            <div class="tl-journal">JAMA Neurology · Vol. 81(12) · Published November 1, 2024 · pp. 1304–1311</div>
+          </div>
+        </div>
+        <div class="tl-card-body">
+          <div class="tl-section-label">Context</div>
+          <p>The revised AA 2024 criteria further entrenched the biological definition. Societal concerns about labeling cognitively normal individuals with AD, the emergence of blood-based biomarkers, and the approval of disease-modifying therapies made an updated IWG response essential.</p>
+
+          <div class="tl-section-label">Key Contributions</div>
+          <div class="tl-contributions">
+            <span class="tl-tag">Updated 2024 IWG Lexicon</span>
+            <span class="tl-tag">Core 1 biomarkers insufficient alone</span>
+            <span class="tl-tag">Presymptomatic AD redefined</span>
+            <span class="tl-tag">Vascular analogy endorsed</span>
+            <span class="tl-tag">Cancer analogy rejected</span>
+            <span class="tl-tag">Blood biomarkers addressed</span>
+          </div>
+
+          <div class="tl-section-label">Scientific Advance</div>
+          <p>The IWG 2024 paper formalises three mutually exclusive categories: <strong>asymptomatic at-risk</strong> (amyloid positive, uncertain progression), <strong>presymptomatic AD</strong> (near-deterministic biomarker profiles: monogenic mutations, Down syndrome, APOE ε4 homozygous with SORL1, amyloid+ tau+ in neocortical regions), and <strong>Alzheimer disease</strong> (symptomatic, clinical phenotype + pathophysiological biomarkers). Core 1 biomarkers alone are insufficient to diagnose AD in cognitively normal individuals.</p>
+
+          <div class="tl-links">
+            <a class="tl-link filled" href="nihms-2071492%20(1).pdf" download>⬇ Download NIHMS version</a>
+            <a class="tl-link" href="https://doi.org/10.1001/jamaneurol.2024.3770" target="_blank">View on JAMA Neurology →</a>
+            <a class="tl-link" href="framework.html">Read the Framework →</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- end .timeline -->
+
+</main>
+
+<!-- ═══════════════ FOOTER ═══════════════ -->
+<button class="back-to-top" id="backToTop" aria-label="Back to top" onclick="window.scrollTo({top:0, behavior:'smooth'})">↑</button>
+
+<footer>
+  <strong>International Working Group on Alzheimer Disease</strong><br>
+  Dubois B, Villain N, Schneider L, Fox N, et al. — <em>JAMA Neurology.</em> 2024;81(12):1304–1311 · doi:10.1001/jamaneurol.2024.3770
+</footer>
+
+<script>
+  const btn = document.getElementById('backToTop');
+  window.addEventListener('scroll', () => {
+    if (window.scrollY > 400) btn.classList.add('visible');
+    else btn.classList.remove('visible');
+  });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,916 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>IWG — Interactive Decision Tool</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --blue:       #C41230;
+      --blue-light: #e8354a;
+      --blue-pale:  #fce8ec;
+      --accent:     #8B0018;
+      --text:       #1a1a1a;
+      --muted:      #6b6b6b;
+      --border:     #e8dede;
+      --white:      #ffffff;
+      --bg:         #f8f6f6;
+
+      --c-est:        #a5d6a7;
+      --c-est-text:   #1b5e20;
+      --c-prob:       #c5e1a5;
+      --c-prob-text:  #33691e;
+      --c-poss:       #fff59d;
+      --c-poss-text:  #b45309;
+      --c-unl:        #ffcc80;
+      --c-unl-text:   #e65100;
+      --c-excl:       #f5b7b1;
+      --c-excl-text:  #922b21;
+      --c-na:         #cfd8dc;
+      --c-na-text:    #455a64;
+
+      --green:      #15803d;
+      --green-pale: #e7f5ec;
+      --red:        #b91c1c;
+      --red-pale:   #fde8e8;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.65;
+    }
+
+    /* ── NAV ── */
+    nav {
+      background: var(--white);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    nav ul {
+      display: flex;
+      justify-content: center;
+      gap: 0;
+      list-style: none;
+      max-width: 980px;
+      margin: 0 auto;
+      overflow-x: auto;
+    }
+    nav a {
+      display: block;
+      padding: 14px 16px;
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 500;
+      white-space: nowrap;
+      transition: color 0.2s, border-bottom 0.2s;
+      border-bottom: 3px solid transparent;
+    }
+    nav a:hover  { color: var(--blue); border-bottom-color: var(--blue); }
+    nav a.active { color: var(--blue); border-bottom-color: var(--blue); }
+
+    /* ── HEADER ── */
+    header {
+      background: var(--white);
+      border-bottom: 3px solid var(--blue);
+      padding: 36px 24px 28px;
+    }
+    .header-inner { max-width: 920px; margin: 0 auto; }
+    .header-label {
+      display: inline-block;
+      background: var(--blue-pale);
+      color: var(--blue);
+      border-radius: 20px;
+      padding: 4px 14px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 14px;
+    }
+    header h1 {
+      font-size: clamp(1.6rem, 4vw, 2.3rem);
+      font-weight: 700;
+      line-height: 1.2;
+      color: var(--blue);
+      margin-bottom: 8px;
+    }
+    header p.subtitle {
+      font-size: 1rem;
+      color: var(--muted);
+      max-width: 720px;
+    }
+
+    /* ── LAYOUT ── */
+    main { max-width: 920px; margin: 0 auto; padding: 36px 24px 64px; }
+
+    /* ── PROGRESS BAR ── */
+    .progress {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      margin-bottom: 32px;
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 16px 20px;
+    }
+    .progress-step {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex: 1;
+      min-width: 0;
+    }
+    .progress-step + .progress-step::before {
+      content: '';
+      width: 24px;
+      height: 2px;
+      background: var(--border);
+      margin: 0 6px 0 0;
+      flex-shrink: 0;
+    }
+    .progress-step.done + .progress-step::before {
+      background: var(--blue);
+    }
+    .progress-num {
+      width: 30px; height: 30px;
+      background: var(--bg);
+      color: var(--muted);
+      border: 2px solid var(--border);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 0.85rem;
+      flex-shrink: 0;
+      transition: background 0.2s, color 0.2s, border-color 0.2s;
+    }
+    .progress-step.active .progress-num {
+      background: var(--blue);
+      color: var(--white);
+      border-color: var(--blue);
+    }
+    .progress-step.done .progress-num {
+      background: var(--blue);
+      color: var(--white);
+      border-color: var(--blue);
+    }
+    .progress-step.done .progress-num::before {
+      content: '✓';
+    }
+    .progress-step.done .progress-num span { display: none; }
+
+    .progress-label {
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+      min-width: 0;
+    }
+    .progress-label .pl-step {
+      font-size: 0.68rem;
+      color: var(--muted);
+      letter-spacing: 0.6px;
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+    .progress-label .pl-name {
+      font-size: 0.82rem;
+      color: var(--text);
+      font-weight: 500;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .progress-step.active .progress-label .pl-name { color: var(--blue); font-weight: 700; }
+    .progress-step.done .progress-label .pl-name { color: var(--blue); font-weight: 600; }
+
+    /* ── STEPS ── */
+    .step {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 28px 32px;
+      margin-bottom: 20px;
+      display: none;
+    }
+    .step.visible { display: block; }
+
+    .step-head {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 6px;
+    }
+    .step-num {
+      width: 38px; height: 38px;
+      background: var(--blue);
+      color: var(--white);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 1rem;
+      flex-shrink: 0;
+    }
+    .step h2 {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--blue);
+      line-height: 1.25;
+    }
+    .step-desc {
+      color: var(--muted);
+      font-size: 0.9rem;
+      margin-bottom: 22px;
+      padding-left: 52px;
+    }
+
+    /* ── PHENOTYPE OPTIONS ── */
+    .pheno-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+    .opt-btn {
+      background: var(--white);
+      border: 2px solid var(--border);
+      border-radius: 12px;
+      padding: 18px 22px;
+      cursor: pointer;
+      text-align: left;
+      font-family: inherit;
+      transition: border-color 0.15s, background 0.15s, transform 0.1s;
+      display: flex;
+      align-items: center;
+      gap: 18px;
+    }
+    .opt-btn:hover {
+      border-color: var(--blue);
+      background: var(--blue-pale);
+    }
+    .opt-btn:active { transform: scale(0.99); }
+
+    .opt-icon {
+      width: 44px; height: 44px;
+      background: var(--blue-pale);
+      color: var(--blue);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      flex-shrink: 0;
+      font-weight: 700;
+    }
+    .opt-content {
+      flex: 1;
+      min-width: 0;
+    }
+    .opt-title {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 3px;
+    }
+    .opt-sub {
+      font-size: 0.82rem;
+      color: var(--muted);
+      line-height: 1.4;
+    }
+    .opt-arrow {
+      color: var(--blue);
+      font-size: 1.2rem;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    /* ── BIOMARKER OPTIONS ── */
+    .bm-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+    .bm-btn {
+      background: var(--white);
+      border: 2px solid var(--border);
+      border-radius: 12px;
+      padding: 20px 18px;
+      cursor: pointer;
+      text-align: center;
+      font-family: inherit;
+      transition: border-color 0.15s, background 0.15s, transform 0.1s;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+    }
+    .bm-btn:hover {
+      transform: translateY(-2px);
+    }
+    .bm-btn.pos:hover { border-color: var(--green); background: var(--green-pale); }
+    .bm-btn.neg:hover { border-color: var(--red); background: var(--red-pale); }
+    .bm-btn.unk:hover { border-color: var(--muted); background: var(--bg); }
+
+    .bm-symbol {
+      font-family: 'SF Mono', 'Menlo', monospace;
+      font-size: 1.6rem;
+      font-weight: 800;
+      padding: 6px 16px;
+      border-radius: 8px;
+      letter-spacing: -1px;
+    }
+    .bm-btn.pos .bm-symbol { color: var(--green); background: var(--green-pale); }
+    .bm-btn.neg .bm-symbol { color: var(--red); background: var(--red-pale); }
+    .bm-btn.unk .bm-symbol { color: var(--muted); background: var(--bg); }
+
+    .bm-label {
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: var(--text);
+    }
+    .bm-desc {
+      font-size: 0.75rem;
+      color: var(--muted);
+      line-height: 1.35;
+    }
+
+    /* ── BACK BUTTON ── */
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: transparent;
+      border: none;
+      color: var(--muted);
+      font-size: 0.85rem;
+      font-weight: 500;
+      cursor: pointer;
+      margin-top: 16px;
+      padding: 6px 0;
+      font-family: inherit;
+      transition: color 0.15s;
+    }
+    .back-link:hover { color: var(--blue); }
+
+    /* ── SELECTION TRAIL ── */
+    .trail {
+      display: none;
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px 20px;
+      margin-bottom: 20px;
+      gap: 14px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    .trail.visible { display: flex; }
+    .trail-label {
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+      color: var(--blue);
+    }
+    .trail-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.85rem;
+      padding: 4px 12px;
+      background: var(--bg);
+      border-radius: 20px;
+      color: var(--text);
+    }
+    .trail-item strong { color: var(--blue); }
+    .trail-arrow { color: var(--border); }
+
+    /* ── RESULT ── */
+    .result {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+      display: none;
+    }
+    .result.visible { display: block; }
+
+    .result-verdict {
+      padding: 32px 36px;
+      text-align: center;
+    }
+    .result-verdict.c-est  { background: var(--c-est);  color: var(--c-est-text); }
+    .result-verdict.c-prob { background: var(--c-prob); color: var(--c-prob-text); }
+    .result-verdict.c-poss { background: var(--c-poss); color: var(--c-poss-text); }
+    .result-verdict.c-unl  { background: var(--c-unl);  color: var(--c-unl-text); }
+    .result-verdict.c-excl { background: var(--c-excl); color: var(--c-excl-text); }
+    .result-verdict.c-na   { background: var(--c-na);   color: var(--c-na-text); }
+
+    .result-label {
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      opacity: 0.7;
+      margin-bottom: 10px;
+    }
+    .result-likelihood {
+      font-size: 2rem;
+      font-weight: 800;
+      line-height: 1.15;
+      margin-bottom: 8px;
+      letter-spacing: -0.5px;
+    }
+    .result-sublabel {
+      font-size: 0.95rem;
+      opacity: 0.95;
+      font-weight: 500;
+    }
+
+    .result-body {
+      padding: 28px 36px 32px;
+    }
+    .result-block {
+      margin-bottom: 22px;
+    }
+    .result-block-label {
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--blue);
+      margin-bottom: 8px;
+    }
+    .result-block p {
+      font-size: 0.95rem;
+      color: var(--text);
+      line-height: 1.65;
+    }
+    .result-block.investigation p {
+      background: var(--blue-pale);
+      border-left: 4px solid var(--blue);
+      padding: 14px 18px;
+      border-radius: 0 8px 8px 0;
+    }
+
+    .result-context {
+      background: var(--bg);
+      border-radius: 12px;
+      padding: 16px 20px;
+      font-size: 0.85rem;
+      color: var(--muted);
+      line-height: 1.55;
+      margin-top: 6px;
+    }
+    .result-context strong { color: var(--text); }
+
+    .result-actions {
+      display: flex;
+      gap: 12px;
+      margin-top: 24px;
+      flex-wrap: wrap;
+    }
+    .btn-primary {
+      background: var(--blue);
+      color: var(--white);
+      border: none;
+      padding: 11px 22px;
+      border-radius: 8px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: inherit;
+      transition: background 0.2s;
+    }
+    .btn-primary:hover { background: var(--accent); }
+    .btn-secondary {
+      background: transparent;
+      color: var(--blue);
+      border: 1.5px solid var(--blue);
+      padding: 10px 22px;
+      border-radius: 8px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: inherit;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: background 0.2s;
+    }
+    .btn-secondary:hover { background: var(--blue-pale); }
+
+    /* ── SOURCE ── */
+    .source-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px 20px;
+      font-size: 0.82rem;
+      color: var(--muted);
+      margin-top: 22px;
+    }
+    .source-card strong { color: var(--text); }
+    .source-card a {
+      color: var(--blue);
+      text-decoration: none;
+      font-weight: 600;
+    }
+    .source-card a:hover { text-decoration: underline; }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--blue);
+      color: rgba(255,255,255,0.7);
+      text-align: center;
+      padding: 32px 24px;
+      font-size: 0.85rem;
+      margin-top: 40px;
+    }
+    footer strong { color: var(--white); }
+
+    @media (max-width: 720px) {
+      .bm-grid { grid-template-columns: 1fr; }
+      .progress-step .progress-label .pl-step { display: none; }
+      .step-desc { padding-left: 0; }
+      nav a { padding: 12px 10px; font-size: 0.78rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════════ NAVIGATION ═══════════════ -->
+<nav>
+  <ul>
+    <li><a href="index.html">Home</a></li>
+    <li><a href="framework.html">Framework</a></li>
+    <li><a href="decision-card.html" class="active">IWG Diagnosis Recommended Algorithm</a></li>
+    <li><a href="steering-committee.html">Steering Committee</a></li>
+    <li><a href="educational-material.html">Educational Material</a></li>
+  </ul>
+</nav>
+
+<!-- ═══════════════ HEADER ═══════════════ -->
+<header>
+  <div class="header-inner">
+    <a href="decision-card.html" style="display:inline-flex; align-items:center; gap:6px; color:var(--muted); text-decoration:none; font-size:0.82rem; font-weight:500; margin-bottom:10px; transition: color 0.15s;" onmouseover="this.style.color='var(--blue)'" onmouseout="this.style.color='var(--muted)'">← Back to the IWG Diagnosis Recommended Algorithm</a>
+    <span class="header-label">Interactive Clinical Tool · IWG 2021</span>
+    <h1>Interactive Decision Tool</h1>
+    <p class="subtitle">
+      A step-by-step interpretation of amyloid and tau biomarkers in light of the clinical phenotype. Make your selections to see the diagnostic likelihood and the recommended further investigation.
+    </p>
+  </div>
+</header>
+
+<!-- ═══════════════ MAIN ═══════════════ -->
+<main>
+
+  <!-- PROGRESS -->
+  <div class="progress" id="progress">
+    <div class="progress-step active" data-step="1">
+      <div class="progress-num"><span>1</span></div>
+      <div class="progress-label">
+        <span class="pl-step">Step 1</span>
+        <span class="pl-name">Phenotype</span>
+      </div>
+    </div>
+    <div class="progress-step" data-step="2">
+      <div class="progress-num"><span>2</span></div>
+      <div class="progress-label">
+        <span class="pl-step">Step 2</span>
+        <span class="pl-name">Amyloid</span>
+      </div>
+    </div>
+    <div class="progress-step" data-step="3">
+      <div class="progress-num"><span>3</span></div>
+      <div class="progress-label">
+        <span class="pl-step">Step 3</span>
+        <span class="pl-name">Tau</span>
+      </div>
+    </div>
+    <div class="progress-step" data-step="4">
+      <div class="progress-num"><span>4</span></div>
+      <div class="progress-label">
+        <span class="pl-step">Result</span>
+        <span class="pl-name">Diagnosis</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- TRAIL -->
+  <div class="trail" id="trail">
+    <span class="trail-label">Your selection</span>
+    <span class="trail-item" id="trail-pheno" style="display:none;"></span>
+    <span class="trail-arrow" id="trail-arrow-1" style="display:none;">›</span>
+    <span class="trail-item" id="trail-amy" style="display:none;"></span>
+    <span class="trail-arrow" id="trail-arrow-2" style="display:none;">›</span>
+    <span class="trail-item" id="trail-tau" style="display:none;"></span>
+  </div>
+
+  <!-- STEP 1 — PHENOTYPE -->
+  <div class="step visible" id="step-1">
+    <div class="step-head">
+      <div class="step-num">1</div>
+      <h2>What is the patient's clinical phenotype?</h2>
+    </div>
+    <p class="step-desc">Select the syndrome that best describes your patient's clinical presentation.</p>
+
+    <div class="pheno-grid">
+      <button class="opt-btn" onclick="selectPheno('common')">
+        <div class="opt-icon">A</div>
+        <div class="opt-content">
+          <div class="opt-title">Common AD phenotypes</div>
+          <div class="opt-sub">Amnestic syndrome of the hippocampal type · Logopenic variant primary progressive aphasia · Posterior cortical atrophy</div>
+        </div>
+        <div class="opt-arrow">→</div>
+      </button>
+
+      <button class="opt-btn" onclick="selectPheno('uncommon')">
+        <div class="opt-icon">B</div>
+        <div class="opt-content">
+          <div class="opt-title">Uncommon AD phenotypes</div>
+          <div class="opt-sub">Behavioural / dysexecutive variant · Corticobasal syndrome · Non-fluent variant PPA · Semantic variant PPA</div>
+        </div>
+        <div class="opt-arrow">→</div>
+      </button>
+
+      <button class="opt-btn" onclick="selectPheno('other')">
+        <div class="opt-icon">C</div>
+        <div class="opt-content">
+          <div class="opt-title">Other phenotypes</div>
+          <div class="opt-sub">Dementia with Lewy bodies · Richardson syndrome · Huntington's disease · Amyotrophic lateral sclerosis · Etc.</div>
+        </div>
+        <div class="opt-arrow">→</div>
+      </button>
+    </div>
+  </div>
+
+  <!-- STEP 2 — AMYLOID -->
+  <div class="step" id="step-2">
+    <div class="step-head">
+      <div class="step-num">2</div>
+      <h2>What is the amyloid biomarker status?</h2>
+    </div>
+    <p class="step-desc">Based on CSF (Aβ42, Aβ40/Aβ42 ratio) or amyloid PET imaging.</p>
+
+    <div class="bm-grid">
+      <button class="bm-btn pos" onclick="selectAmy('pos')">
+        <div class="bm-symbol">A+</div>
+        <div class="bm-label">Positive</div>
+        <div class="bm-desc">Low CSF Aβ42 or<br>positive amyloid PET</div>
+      </button>
+      <button class="bm-btn neg" onclick="selectAmy('neg')">
+        <div class="bm-symbol">A−</div>
+        <div class="bm-label">Negative</div>
+        <div class="bm-desc">Normal CSF Aβ42 or<br>negative amyloid PET</div>
+      </button>
+      <button class="bm-btn unk" onclick="selectAmy('unk')">
+        <div class="bm-symbol">A?</div>
+        <div class="bm-label">Unknown</div>
+        <div class="bm-desc">Not measured or<br>indeterminate</div>
+      </button>
+    </div>
+
+    <button class="back-link" onclick="goBack(1)">← Back to phenotype</button>
+  </div>
+
+  <!-- STEP 3 — TAU -->
+  <div class="step" id="step-3">
+    <div class="step-head">
+      <div class="step-num">3</div>
+      <h2>What is the tau biomarker status?</h2>
+    </div>
+    <p class="step-desc">Based on CSF (phospho-tau) or tau PET imaging.</p>
+
+    <div class="bm-grid">
+      <button class="bm-btn pos" onclick="selectTau('pos')">
+        <div class="bm-symbol">T+</div>
+        <div class="bm-label">Positive</div>
+        <div class="bm-desc">High CSF p-tau or<br>positive tau PET</div>
+      </button>
+      <button class="bm-btn neg" onclick="selectTau('neg')">
+        <div class="bm-symbol">T−</div>
+        <div class="bm-label">Negative</div>
+        <div class="bm-desc">Normal CSF p-tau or<br>negative tau PET</div>
+      </button>
+      <button class="bm-btn unk" onclick="selectTau('unk')">
+        <div class="bm-symbol">T?</div>
+        <div class="bm-label">Unknown</div>
+        <div class="bm-desc">Not measured or<br>indeterminate</div>
+      </button>
+    </div>
+
+    <button class="back-link" onclick="goBack(2)">← Back to amyloid</button>
+  </div>
+
+  <!-- STEP 4 — RESULT -->
+  <div class="result" id="result">
+    <div class="result-verdict" id="result-verdict">
+      <div class="result-label">Diagnostic likelihood</div>
+      <div class="result-likelihood" id="result-likelihood">—</div>
+      <div class="result-sublabel" id="result-sublabel">—</div>
+    </div>
+    <div class="result-body">
+      <div class="result-block investigation">
+        <div class="result-block-label">Recommended further investigation</div>
+        <p id="result-investigation">—</p>
+      </div>
+      <div class="result-block">
+        <div class="result-block-label">Clinical context</div>
+        <div class="result-context" id="result-context">—</div>
+      </div>
+      <div class="result-actions">
+        <button class="btn-primary" onclick="restart()">↻ Start over</button>
+        <a class="btn-secondary" href="decision-card.html">View the full matrix →</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- SOURCE -->
+  <div class="source-card">
+    <strong>Based on:</strong>
+    Table 2 of Dubois B, Villain N, Frisoni GB, et al. <em>Lancet Neurology</em>, 2021 · <a href="Dubois 2021.pdf" download>⬇ Download PDF</a> · <a href="https://doi.org/10.1016/S1474-4422(21)00066-1" target="_blank">View on Lancet →</a>
+  </div>
+
+</main>
+
+<!-- ═══════════════ FOOTER ═══════════════ -->
+<footer>
+  <strong>International Working Group on Alzheimer Disease</strong><br>
+  Dubois B, Villain N, Schneider L, Fox N, et al. — <em>JAMA Neurology.</em> 2024;81(12):1304–1311 · doi:10.1001/jamaneurol.2024.3770
+</footer>
+
+<script>
+  // ─────────────────────────────────────
+  // Decision data (from IWG 2021 Table 2)
+  // ─────────────────────────────────────
+  const data = {
+    common: {
+      label: 'Common AD phenotype',
+      sub: 'amnestic · logopenic PPA · posterior cortical atrophy',
+      results: {
+        'pos|pos': { level: 'c-est',  text: 'Highly probable – established', sub: 'Diagnosis of Alzheimer disease established', invest: 'None required.' },
+        'pos|unk': { level: 'c-prob', text: 'Probable',                       sub: 'Alzheimer disease is the most likely diagnosis', invest: 'Consider a tau measure (PET, CSF).' },
+        'pos|neg': { level: 'c-prob', text: 'Probable',                       sub: 'Alzheimer disease remains the most likely diagnosis', invest: 'Consider an additional tau measure (PET, CSF) to confirm.' },
+        'unk|pos': { level: 'c-poss', text: 'Possible',                       sub: 'Alzheimer disease is one possibility', invest: 'Consider an amyloid measure (PET, CSF).' },
+        'neg|pos': { level: 'c-poss', text: 'Possible',                       sub: 'Alzheimer disease is one possibility', invest: 'Consider an additional amyloid measure (PET, CSF) to confirm.' },
+        'neg|unk': { level: 'c-unl',  text: 'Unlikely',                       sub: 'Alzheimer disease is unlikely as the primary diagnosis', invest: 'Full investigation of cause and consider a tau measure (PET, CSF).' },
+        'unk|neg': { level: 'c-unl',  text: 'Unlikely',                       sub: 'Alzheimer disease is unlikely as the primary diagnosis', invest: 'Full investigation of cause and consider an amyloid measure (PET, CSF).' },
+        'neg|neg': { level: 'c-excl', text: 'Highly unlikely – excluded',     sub: 'Alzheimer disease is excluded as primary diagnosis', invest: 'Full investigation of cause.' },
+        'unk|unk': { level: 'c-na',   text: 'Non-assessable',                 sub: 'Diagnostic conclusion cannot be reached without biomarker data', invest: 'Consider tau and amyloid measures (PET, CSF).' }
+      },
+      context: 'Common AD phenotypes — amnestic syndrome of the hippocampal type, logopenic variant primary progressive aphasia, and posterior cortical atrophy — are the most typical clinical presentations of Alzheimer disease pathology. Positive amyloid and tau biomarkers are highly specific for AD in this context.'
+    },
+    uncommon: {
+      label: 'Uncommon AD phenotype',
+      sub: 'behavioural / dysexecutive · corticobasal · non-fluent PPA · semantic PPA',
+      results: {
+        'pos|pos': { level: 'c-prob', text: 'Probable',                       sub: 'Alzheimer disease is the likely cause, but careful follow-up required', invest: 'None required; careful follow-up needed — an incongruent clinical phenotype and neurodegeneration pattern should trigger a new investigation.' },
+        'pos|unk': { level: 'c-poss', text: 'Possible',                       sub: 'Alzheimer disease is one possible cause', invest: 'Consider a tau measure (PET, CSF).' },
+        'pos|neg': { level: 'c-poss', text: 'Possible',                       sub: 'Alzheimer disease is one possible cause', invest: 'Consider an additional tau measure (PET, CSF).' },
+        'unk|pos': { level: 'c-unl',  text: 'Unlikely',                       sub: 'Alzheimer disease is unlikely as the primary cause', invest: 'Full investigation of cause and consider an amyloid measure (PET, CSF).' },
+        'neg|pos': { level: 'c-unl',  text: 'Unlikely',                       sub: 'Alzheimer disease is unlikely as the primary cause', invest: 'Full investigation of cause.' },
+        'neg|unk': { level: 'c-excl', text: 'Highly unlikely – excluded',     sub: 'Alzheimer disease is excluded as the primary cause', invest: 'Full investigation of cause.' },
+        'unk|neg': { level: 'c-excl', text: 'Highly unlikely – excluded',     sub: 'Alzheimer disease is excluded as the primary cause', invest: 'Full investigation of cause.' },
+        'neg|neg': { level: 'c-excl', text: 'Highly unlikely – excluded',     sub: 'Alzheimer disease is excluded as the primary cause', invest: 'Full investigation of cause.' },
+        'unk|unk': { level: 'c-na',   text: 'Non-assessable',                 sub: 'Diagnostic conclusion cannot be reached without biomarker data', invest: 'Full investigation of cause and consider tau and amyloid measures (PET, CSF).' }
+      },
+      context: 'Uncommon AD phenotypes — corticobasal syndrome, behavioural / dysexecutive variant, non-fluent and semantic variants of primary progressive aphasia — can be caused by Alzheimer pathology but are also frequently associated with other neurodegenerative diseases (FTD spectrum). Biomarker interpretation must account for this lower pre-test probability.'
+    },
+    other: {
+      label: 'Other phenotype',
+      sub: 'Lewy bodies · Richardson · Huntington · ALS · etc.',
+      results: {
+        'pos|pos': { level: 'c-unl',  text: 'Unlikely',                       sub: 'Alzheimer disease is unlikely as the dominant pathology', invest: 'Full investigation of cause.' },
+        'pos|unk': { level: 'c-unl',  text: 'Unlikely',                       sub: 'Alzheimer disease is unlikely as the dominant pathology', invest: 'Full investigation of cause.' },
+        'pos|neg': { level: 'c-unl',  text: 'Unlikely',                       sub: 'Alzheimer disease is unlikely as the dominant pathology', invest: 'Full investigation of cause.' },
+        'unk|pos': { level: 'c-unl',  text: 'Unlikely',                       sub: 'Alzheimer disease is unlikely as the dominant pathology', invest: 'Full investigation of cause.' },
+        'neg|pos': { level: 'c-unl',  text: 'Unlikely',                       sub: 'Alzheimer disease is unlikely as the dominant pathology', invest: 'Full investigation of cause.' },
+        'neg|unk': { level: 'c-excl', text: 'Highly unlikely – excluded',     sub: 'Alzheimer disease is excluded as the dominant pathology', invest: 'Full investigation of cause.' },
+        'unk|neg': { level: 'c-excl', text: 'Highly unlikely – excluded',     sub: 'Alzheimer disease is excluded as the dominant pathology', invest: 'Full investigation of cause.' },
+        'neg|neg': { level: 'c-excl', text: 'Highly unlikely – excluded',     sub: 'Alzheimer disease is excluded as the dominant pathology', invest: 'Full investigation of cause.' },
+        'unk|unk': { level: 'c-excl', text: 'Highly unlikely – excluded',     sub: 'Alzheimer disease is excluded as the dominant pathology', invest: 'Full investigation of cause.' }
+      },
+      context: 'When the clinical phenotype suggests a non-AD disease (Lewy body, Richardson syndrome, Huntington, ALS, etc.), positive amyloid or tau biomarkers most often reflect a copathology rather than the primary disease process. Alzheimer disease should not be considered the primary diagnosis in this context.'
+    }
+  };
+
+  const bmLabel = { pos: 'positive', neg: 'negative', unk: 'unknown' };
+  const bmSymbol = { pos: '+', neg: '−', unk: '?' };
+
+  let selection = { pheno: null, amy: null, tau: null };
+
+  function selectPheno(p) {
+    selection.pheno = p;
+    setStep(2);
+    updateTrail();
+  }
+  function selectAmy(a) {
+    selection.amy = a;
+    setStep(3);
+    updateTrail();
+  }
+  function selectTau(t) {
+    selection.tau = t;
+    setStep(4);
+    showResult();
+  }
+
+  function setStep(n) {
+    document.querySelectorAll('.step').forEach(el => el.classList.remove('visible'));
+    document.getElementById('result').classList.remove('visible');
+    if (n <= 3) {
+      document.getElementById('step-' + n).classList.add('visible');
+    }
+    document.querySelectorAll('.progress-step').forEach((el, i) => {
+      el.classList.remove('active', 'done');
+      const step = i + 1;
+      if (step < n) el.classList.add('done');
+      else if (step === n) el.classList.add('active');
+    });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function goBack(n) {
+    if (n < 3) { selection.tau = null; }
+    if (n < 2) { selection.amy = null; }
+    if (n < 1) { selection.pheno = null; }
+    setStep(n);
+    updateTrail();
+  }
+
+  function updateTrail() {
+    const trail = document.getElementById('trail');
+    const tp = document.getElementById('trail-pheno');
+    const ta = document.getElementById('trail-amy');
+    const tt = document.getElementById('trail-tau');
+    const a1 = document.getElementById('trail-arrow-1');
+    const a2 = document.getElementById('trail-arrow-2');
+
+    if (!selection.pheno) {
+      trail.classList.remove('visible');
+      return;
+    }
+    trail.classList.add('visible');
+
+    tp.style.display = 'inline-flex';
+    tp.innerHTML = '<strong>Phenotype:</strong>&nbsp;' + data[selection.pheno].label;
+
+    if (selection.amy) {
+      a1.style.display = 'inline';
+      ta.style.display = 'inline-flex';
+      ta.innerHTML = '<strong>Amyloid:</strong>&nbsp;A' + bmSymbol[selection.amy];
+    } else {
+      a1.style.display = 'none';
+      ta.style.display = 'none';
+    }
+    if (selection.tau) {
+      a2.style.display = 'inline';
+      tt.style.display = 'inline-flex';
+      tt.innerHTML = '<strong>Tau:</strong>&nbsp;T' + bmSymbol[selection.tau];
+    } else {
+      a2.style.display = 'none';
+      tt.style.display = 'none';
+    }
+  }
+
+  function showResult() {
+    const key = selection.amy + '|' + selection.tau;
+    const r = data[selection.pheno].results[key];
+    const verdict = document.getElementById('result-verdict');
+
+    // remove all colour classes
+    verdict.classList.remove('c-est', 'c-prob', 'c-poss', 'c-unl', 'c-excl', 'c-na');
+    verdict.classList.add(r.level);
+
+    document.getElementById('result-likelihood').textContent = r.text;
+    document.getElementById('result-sublabel').textContent = r.sub;
+    document.getElementById('result-investigation').textContent = r.invest;
+    document.getElementById('result-context').textContent = data[selection.pheno].context;
+
+    document.getElementById('result').classList.add('visible');
+    updateTrail();
+  }
+
+  function restart() {
+    selection = { pheno: null, amy: null, tau: null };
+    document.getElementById('result').classList.remove('visible');
+    setStep(1);
+    updateTrail();
+  }
+</script>
+
+</body>
+</html>

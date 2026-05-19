@@ -356,6 +356,40 @@
     }
     footer strong { color: var(--white); }
 
+    /* ── BACK TO TOP BUTTON ── */
+    .back-to-top {
+      position: fixed;
+      bottom: 28px;
+      right: 28px;
+      width: 46px;
+      height: 46px;
+      background: var(--blue);
+      color: var(--white);
+      border: none;
+      border-radius: 50%;
+      font-size: 1.2rem;
+      font-weight: 700;
+      cursor: pointer;
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(8px);
+      transition: opacity 0.25s, visibility 0.25s, transform 0.25s, background 0.2s;
+      box-shadow: 0 4px 14px rgba(196, 18, 48, 0.3);
+      z-index: 60;
+    }
+    .back-to-top.visible {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+    .back-to-top:hover {
+      background: var(--accent);
+      transform: translateY(-3px);
+    }
+    @media (max-width: 640px) {
+      .back-to-top { bottom: 18px; right: 18px; width: 42px; height: 42px; }
+    }
+
     /* ── RESPONSIVE ── */
     @media (max-width: 640px) {
       .video-grid { grid-template-columns: 1fr; }
@@ -369,7 +403,8 @@
   <nav>
     <ul>
       <li><a href="index.html">Home</a></li>
-      <li><a href="framework.html">IWG 2024 Framework</a></li>
+      <li><a href="framework.html">Framework</a></li>
+      <li><a href="decision-card.html">IWG Diagnosis Recommended Algorithm</a></li>
       <li><a href="steering-committee.html">Steering Committee</a></li>
       <li><a href="educational-material.html" class="active">Educational Material</a></li>
     </ul>
@@ -623,18 +658,35 @@
           </div>
         </a>
 
-        <!-- Doc 3 -->
-        <div class="doc-card" style="opacity:0.6; cursor:default;">
+        <!-- Doc 3 — IWG Lexicon Summary (active) -->
+        <a class="doc-card" href="lexicon.html">
           <div class="doc-icon pdf">📕</div>
           <div class="doc-info">
-            <h3>IWG Lexicon Summary <span class="coming-soon">Soon</span></h3>
+            <h3>IWG Lexicon Summary</h3>
             <p>At-Risk / Presymptomatic AD / Alzheimer Disease — 1-page reference card</p>
           </div>
           <div class="doc-footer">
-            <span>PDF</span>
-            <span style="font-size:0.78rem; color:var(--muted);">Not yet available</span>
+            <span>Online · Printable</span>
+            <span class="doc-download">
+              Open →
+            </span>
           </div>
-        </div>
+        </a>
+
+        <!-- Doc 3b — For Clinicians (active) -->
+        <a class="doc-card" href="clinicians-card.html">
+          <div class="doc-icon pdf">🩺</div>
+          <div class="doc-info">
+            <h3>For Clinicians — Quick Reference</h3>
+            <p>When biomarkers support an AD diagnosis vs when they should be interpreted as risk markers</p>
+          </div>
+          <div class="doc-footer">
+            <span>Online · Printable</span>
+            <span class="doc-download">
+              Open →
+            </span>
+          </div>
+        </a>
 
         <!-- Doc 4 -->
         <div class="doc-card" style="opacity:0.6; cursor:default;">
@@ -680,10 +732,20 @@
 
   </main>
 
+  <button class="back-to-top" id="backToTop" aria-label="Back to top" onclick="window.scrollTo({top:0, behavior:'smooth'})">↑</button>
+
   <footer>
     <strong>International Working Group on Alzheimer Disease</strong><br>
     Dubois B, Villain N, Schneider L, Fox N, et al. — <em>JAMA Neurology.</em> 2024;81(12):1304–1311 · doi:10.1001/jamaneurol.2024.3770
   </footer>
+
+  <script>
+    const btn = document.getElementById('backToTop');
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 400) btn.classList.add('visible');
+      else btn.classList.remove('visible');
+    });
+  </script>
 
 </body>
 </html>

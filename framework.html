@@ -262,6 +262,118 @@
     .td-negative { color: #b91c1c; }
     .td-positive { color: #15803d; }
 
+    /* ── CONCEPTUAL COMPARISON CARDS ── */
+    .concept-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin: 24px 0 8px;
+    }
+    .concept-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 26px 28px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    .concept-card.iwg { border-top: 4px solid #15803d; }
+    .concept-card.aa  { border-top: 4px solid #b91c1c; }
+    .concept-tag {
+      display: inline-block;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      padding: 3px 10px;
+      border-radius: 20px;
+      align-self: flex-start;
+    }
+    .concept-card.iwg .concept-tag { background: #e7f5ec; color: #15803d; }
+    .concept-card.aa  .concept-tag { background: #fde8e8; color: #b91c1c; }
+    .concept-card h3 {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--text);
+      line-height: 1.3;
+    }
+    .concept-card h3 .ref {
+      display: block;
+      font-size: 0.78rem;
+      font-weight: 400;
+      color: var(--muted);
+      margin-top: 4px;
+      font-style: italic;
+    }
+    .concept-block {
+      padding-top: 14px;
+    }
+    /* line under the card title */
+    .concept-block:first-of-type {
+      border-top: 1px solid #c8b9b9;
+    }
+    .concept-block-label {
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+      color: var(--blue);
+      margin-bottom: 6px;
+    }
+    .concept-block p { font-size: 0.88rem; color: var(--text); line-height: 1.6; }
+
+    .concept-block ul { list-style: none; padding: 0; margin: 8px 0 0; }
+    .concept-block ul li {
+      position: relative;
+      padding-left: 18px;
+      font-size: 0.85rem;
+      color: var(--text);
+      line-height: 1.5;
+      margin-bottom: 8px;
+    }
+    .concept-block ul li::before {
+      content: '▸';
+      position: absolute;
+      left: 0; top: 0;
+      color: var(--blue);
+      font-weight: 700;
+    }
+    .concept-block ul li strong { color: var(--blue); }
+
+    /* ── KEY DISTINCTION CALLOUT ── */
+    .key-distinction {
+      background: linear-gradient(135deg, var(--blue) 0%, var(--accent) 100%);
+      color: var(--white);
+      border-radius: 14px;
+      padding: 22px 28px;
+      margin: 28px 0 8px;
+    }
+    .key-distinction-label {
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.75);
+      margin-bottom: 8px;
+    }
+    .key-distinction p {
+      font-size: 0.95rem;
+      line-height: 1.6;
+      font-weight: 500;
+    }
+    .key-distinction em {
+      background: rgba(255,255,255,0.18);
+      padding: 1px 8px;
+      border-radius: 4px;
+      font-style: normal;
+      font-weight: 600;
+    }
+
+    @media (max-width: 720px) {
+      .concept-grid { grid-template-columns: 1fr; }
+    }
+
     /* ── RECOMMENDATIONS ── */
     .reco-list { display: grid; gap: 14px; margin-top: 24px; }
     .reco-item {
@@ -341,9 +453,105 @@
     }
     footer strong { color: var(--white); }
 
+    /* ── BACK TO TOP BUTTON ── */
+    .back-to-top {
+      position: fixed;
+      bottom: 28px;
+      right: 28px;
+      width: 46px;
+      height: 46px;
+      background: var(--blue);
+      color: var(--white);
+      border: none;
+      border-radius: 50%;
+      font-size: 1.2rem;
+      font-weight: 700;
+      cursor: pointer;
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(8px);
+      transition: opacity 0.25s, visibility 0.25s, transform 0.25s, background 0.2s;
+      box-shadow: 0 4px 14px rgba(196, 18, 48, 0.3);
+      z-index: 60;
+    }
+    .back-to-top.visible {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+    .back-to-top:hover {
+      background: var(--accent);
+      transform: translateY(-3px);
+    }
+
+    /* ── STICKY TABLE OF CONTENTS ── */
+    .page-toc {
+      position: fixed;
+      top: 90px;
+      left: max(20px, calc(50vw - 700px));
+      width: 200px;
+      max-height: calc(100vh - 120px);
+      overflow-y: auto;
+      z-index: 50;
+      padding-right: 8px;
+    }
+    .page-toc-label {
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 12px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--border);
+    }
+    .page-toc ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    .page-toc li {
+      margin: 0;
+    }
+    .page-toc a {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 7px 0;
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.82rem;
+      font-weight: 500;
+      line-height: 1.35;
+      transition: color 0.15s;
+    }
+    .page-toc a:hover { color: var(--blue); }
+    .page-toc a .toc-mark {
+      width: 3px;
+      height: 14px;
+      background: transparent;
+      border-radius: 2px;
+      flex-shrink: 0;
+      transition: background 0.2s, height 0.2s;
+    }
+    .page-toc a.active {
+      color: var(--blue);
+      font-weight: 600;
+    }
+    .page-toc a.active .toc-mark {
+      background: var(--blue);
+      height: 18px;
+    }
+
+    /* Hide TOC on smaller screens (no room beside content) */
+    @media (max-width: 1240px) {
+      .page-toc { display: none; }
+    }
+
     @media (max-width: 640px) {
       nav a { padding: 12px 12px; font-size: 0.8rem; }
       .grid-3 { grid-template-columns: 1fr; }
+      .back-to-top { bottom: 18px; right: 18px; width: 42px; height: 42px; }
     }
   </style>
 </head>
@@ -353,7 +561,8 @@
 <nav>
   <ul>
     <li><a href="index.html">Home</a></li>
-    <li><a href="framework.html" class="active">IWG 2024 Framework</a></li>
+    <li><a href="framework.html" class="active">Framework</a></li>
+    <li><a href="decision-card.html">IWG Diagnosis Recommended Algorithm</a></li>
     <li><a href="steering-committee.html">Steering Committee</a></li>
     <li><a href="educational-material.html">Educational Material</a></li>
   </ul>
@@ -506,7 +715,91 @@
   <section id="comparison">
     <h2><span class="icon">⚖️</span> AA 2024 vs. IWG 2024</h2>
     <p class="section-intro">
-      A direct comparison of the two competing frameworks across key clinical dimensions.
+      Two competing frameworks rest on fundamentally different conceptions of what Alzheimer disease <em>is</em>. The IWG defines AD as a clinical-biological entity; the AA defines it as a biological continuum. This conceptual divide drives every downstream disagreement on diagnosis, communication, and clinical practice.
+    </p>
+
+    <!-- ── CONCEPTUAL FOUNDATION ── -->
+    <h3 style="font-size:1.05rem; font-weight:700; color:var(--text); margin-bottom:4px;">
+      The conceptual foundation
+    </h3>
+    <p style="font-size:0.88rem; color:var(--muted); margin-bottom:8px;">
+      Where each framework starts from — and what it means in practice for asymptomatic individuals.
+    </p>
+
+    <div class="concept-grid">
+
+      <!-- IWG card -->
+      <div class="concept-card iwg">
+        <span class="concept-tag">International Working Group</span>
+        <h3>
+          Clinical-Biological Entity
+          <span class="ref">Dubois et al., Lancet Neurology, 2024</span>
+        </h3>
+        <div class="concept-block">
+          <div class="concept-block-label">Concept of Alzheimer's disease</div>
+          <p>
+            <strong>Clinical-biological:</strong> neuropathological lesions <em>explain</em> the cognitive phenotype.
+          </p>
+        </div>
+        <div class="concept-block definition">
+          <div class="concept-block-label">Definition of Alzheimer's disease</div>
+          <p>
+            Alzheimer's disease neuropathological lesions are the <strong>primary cause</strong> of the cognitive phenotype.
+          </p>
+        </div>
+        <div class="concept-block">
+          <div class="concept-block-label">Cognitively unimpaired individuals — Risk stratification</div>
+          <ul>
+            <li><strong>Presymptomatic AD</strong> — risk of developing the cognitive phenotype ≈ 100% (ADAD, widespread neocortical tau)</li>
+            <li><strong>Asymptomatic – at risk for AD</strong> — risk significantly lower than 100% (positive PET or CSF biomarkers)</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- AA card -->
+      <div class="concept-card aa">
+        <span class="concept-tag">Alzheimer Association</span>
+        <h3>
+          Biological Continuum
+          <span class="ref">Jack et al., Alzheimer's &amp; Dementia, 2024</span>
+        </h3>
+        <div class="concept-block">
+          <div class="concept-block-label">Concept of Alzheimer's disease</div>
+          <p>
+            <strong>Biological:</strong> pathophysiological continuum starting from the first neuropathological lesions.
+          </p>
+        </div>
+        <div class="concept-block definition">
+          <div class="concept-block-label">Definition of Alzheimer's disease</div>
+          <p>
+            Alzheimer's disease neuropathological lesions <strong>are</strong> Alzheimer's disease.
+          </p>
+        </div>
+        <div class="concept-block">
+          <div class="concept-block-label">Cognitively unimpaired individuals — One nosological category</div>
+          <ul>
+            <li><strong>Alzheimer's disease</strong> — biomarker positivity is sufficient to establish the diagnosis</li>
+            <li><strong>All biomarker-positive individuals have preclinical AD</strong> — a stage of the same disease</li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Key distinction callout -->
+    <div class="key-distinction">
+      <div class="key-distinction-label">The root of the disagreement</div>
+      <p>
+        The dispute is not whether biomarkers are useful — both frameworks agree they are. The dispute is whether <em>biomarker positivity alone</em> should be sufficient to define disease in cognitively unimpaired individuals.
+      </p>
+    </div>
+
+    <!-- ── PRACTICAL CONSEQUENCES TABLE ── -->
+    <h3 style="font-size:1.05rem; font-weight:700; color:var(--text); margin: 32px 0 4px;">
+      Practical consequences
+    </h3>
+    <p style="font-size:0.88rem; color:var(--muted); margin-bottom:8px;">
+      How the conceptual divide translates into everyday clinical and research decisions.
     </p>
     <div class="table-wrap">
       <table>
@@ -532,6 +825,11 @@
             <td>Disclosure to Cognitively Normal, Biomarker-Positive Individuals</td>
             <td class="td-negative">"You have Alzheimer disease"</td>
             <td class="td-positive">"You are at-risk for Alzheimer disease"</td>
+          </tr>
+          <tr>
+            <td>Cognitively unimpaired individuals</td>
+            <td class="td-negative">One nosological category — all biomarker positives have preclinical AD</td>
+            <td class="td-positive">Risk stratification — presymptomatic AD vs at-risk</td>
           </tr>
           <tr>
             <td>Trial Endpoints</td>
@@ -636,10 +934,54 @@
 </main>
 
 <!-- ═══════════════ FOOTER ═══════════════ -->
+<!-- ═══════════════ STICKY TABLE OF CONTENTS ═══════════════ -->
+<aside class="page-toc" aria-label="On this page">
+  <div class="page-toc-label">On this page</div>
+  <ul>
+    <li><a href="#context"><span class="toc-mark"></span>Context</a></li>
+    <li><a href="#biomarkers"><span class="toc-mark"></span>The Value of Biomarkers</a></li>
+    <li><a href="#problem"><span class="toc-mark"></span>The Core Problem</a></li>
+    <li><a href="#framework"><span class="toc-mark"></span>The 2024 IWG Framework</a></li>
+    <li><a href="#comparison"><span class="toc-mark"></span>AA 2024 vs IWG 2024</a></li>
+    <li><a href="#recommendations"><span class="toc-mark"></span>Key Recommendations</a></li>
+    <li><a href="#future"><span class="toc-mark"></span>From Diagnosis to Prevention</a></li>
+    <li><a href="#authors"><span class="toc-mark"></span>Authors &amp; Affiliations</a></li>
+  </ul>
+</aside>
+
+<!-- ═══════════════ BACK TO TOP ═══════════════ -->
+<button class="back-to-top" id="backToTop" aria-label="Back to top" onclick="window.scrollTo({top:0, behavior:'smooth'})">↑</button>
+
 <footer>
   <strong>International Working Group on Alzheimer Disease</strong><br>
   Dubois B, Villain N, Schneider L, Fox N, et al. — <em>JAMA Neurology.</em> 2024;81(12):1304–1311 · doi:10.1001/jamaneurol.2024.3770
 </footer>
+
+<script>
+  // Back to top button visibility
+  const btn = document.getElementById('backToTop');
+  window.addEventListener('scroll', () => {
+    if (window.scrollY > 400) btn.classList.add('visible');
+    else btn.classList.remove('visible');
+  });
+
+  // TOC active section highlighting via IntersectionObserver
+  const tocLinks = document.querySelectorAll('.page-toc a');
+  const sections = document.querySelectorAll('main section[id]');
+  if (sections.length && 'IntersectionObserver' in window) {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const id = entry.target.id;
+          tocLinks.forEach(link => {
+            link.classList.toggle('active', link.getAttribute('href') === '#' + id);
+          });
+        }
+      });
+    }, { rootMargin: '-30% 0px -60% 0px' });
+    sections.forEach(s => observer.observe(s));
+  }
+</script>
 
 </body>
 </html>

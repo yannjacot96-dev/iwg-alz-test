@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>IWG 2024 — Lexicon Summary</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --blue:       #C41230;
+      --blue-light: #e8354a;
+      --blue-pale:  #fce8ec;
+      --accent:     #8B0018;
+      --text:       #1a1a1a;
+      --muted:      #6b6b6b;
+      --border:     #e8dede;
+      --white:      #ffffff;
+      --bg:         #f8f6f6;
+
+      --green:      #15803d;
+      --green-pale: #e7f5ec;
+      --green-bd:   #b9e0c6;
+
+      --amber:      #b45309;
+      --amber-pale: #fef3c7;
+      --amber-bd:   #fde68a;
+
+      --red:        #b91c1c;
+      --red-pale:   #fde8e8;
+      --red-bd:     #f5b9b9;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.55;
+    }
+
+    /* ── NAV ── */
+    nav {
+      background: var(--white);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    nav ul {
+      display: flex;
+      justify-content: center;
+      gap: 0;
+      list-style: none;
+      max-width: 980px;
+      margin: 0 auto;
+      overflow-x: auto;
+    }
+    nav a {
+      display: block;
+      padding: 14px 16px;
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 500;
+      white-space: nowrap;
+      transition: color 0.2s, border-bottom 0.2s;
+      border-bottom: 3px solid transparent;
+    }
+    nav a:hover  { color: var(--blue); border-bottom-color: var(--blue); }
+    nav a.active { color: var(--blue); border-bottom-color: var(--blue); }
+
+    /* ── HEADER ── */
+    header {
+      background: var(--white);
+      border-bottom: 3px solid var(--blue);
+      padding: 36px 24px 28px;
+    }
+    .header-inner {
+      max-width: 1080px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: 32px;
+      flex-wrap: wrap;
+    }
+    .header-text { flex: 1; min-width: 280px; }
+    .header-label {
+      display: inline-block;
+      background: var(--blue-pale);
+      color: var(--blue);
+      border-radius: 20px;
+      padding: 4px 14px;
+      font-size: 0.74rem;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+    header h1 {
+      font-size: clamp(1.5rem, 3.8vw, 2.1rem);
+      font-weight: 700;
+      line-height: 1.2;
+      color: var(--blue);
+      margin-bottom: 6px;
+    }
+    header p.subtitle {
+      font-size: 0.95rem;
+      color: var(--muted);
+      max-width: 620px;
+    }
+    .print-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--blue);
+      color: var(--white);
+      text-decoration: none;
+      padding: 10px 18px;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .print-btn:hover { background: var(--accent); }
+
+    /* ── LAYOUT ── */
+    main { max-width: 1080px; margin: 0 auto; padding: 32px 24px 56px; }
+
+    /* ── PRINCIPLE ── */
+    .principle {
+      background: linear-gradient(135deg, var(--blue) 0%, var(--accent) 100%);
+      color: var(--white);
+      border-radius: 14px;
+      padding: 20px 26px;
+      margin-bottom: 24px;
+    }
+    .principle p {
+      font-size: 0.95rem;
+      font-weight: 500;
+      margin: 0;
+      line-height: 1.55;
+    }
+    .principle em {
+      background: rgba(255,255,255,0.18);
+      padding: 1px 8px;
+      border-radius: 4px;
+      font-style: normal;
+      font-weight: 600;
+    }
+
+    /* ── SPECTRUM ── */
+    .spectrum {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 18px 22px 20px;
+      margin-bottom: 28px;
+    }
+    .spectrum-title {
+      font-size: 0.74rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--blue);
+      margin-bottom: 12px;
+    }
+    .spectrum-bar {
+      display: flex;
+      height: 36px;
+      border-radius: 8px;
+      overflow: hidden;
+      margin-bottom: 8px;
+    }
+    .spectrum-seg {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--white);
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.3px;
+      position: relative;
+    }
+    .spectrum-seg.healthy { background: #6b7280; }
+    .spectrum-seg.atrisk  { background: var(--amber); }
+    .spectrum-seg.presym  { background: var(--blue); }
+    .spectrum-seg.ad      { background: var(--green); }
+
+    .spectrum-labels {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      font-size: 0.74rem;
+      color: var(--muted);
+      text-align: center;
+      gap: 2px;
+      margin-top: 4px;
+    }
+    .spectrum-labels span {
+      display: block;
+      line-height: 1.35;
+    }
+
+    /* ── LEXICON GRID ── */
+    .lex-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+    .lex-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+    .lex-card-header {
+      padding: 16px 20px 14px;
+      color: var(--white);
+    }
+    .lex-card.atrisk .lex-card-header { background: var(--amber); }
+    .lex-card.presym .lex-card-header { background: var(--blue); }
+    .lex-card.ad     .lex-card-header { background: var(--green); }
+
+    .lex-card-header .lex-step {
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      opacity: 0.85;
+      margin-bottom: 4px;
+    }
+    .lex-card-header h3 {
+      font-size: 1.05rem;
+      font-weight: 700;
+      line-height: 1.25;
+    }
+    .lex-card-header .lex-cat-sub {
+      display: block;
+      font-size: 0.78rem;
+      font-weight: 400;
+      opacity: 0.9;
+      margin-top: 4px;
+    }
+
+    .lex-card-body {
+      padding: 18px 20px 20px;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      gap: 14px;
+    }
+
+    .lex-row {
+      display: grid;
+      grid-template-columns: 90px 1fr;
+      gap: 8px;
+      align-items: start;
+      font-size: 0.82rem;
+    }
+    .lex-row-label {
+      font-size: 0.66rem;
+      font-weight: 700;
+      letter-spacing: 0.6px;
+      text-transform: uppercase;
+      color: var(--blue);
+      padding-top: 2px;
+    }
+    .lex-card.atrisk .lex-row-label { color: var(--amber); }
+    .lex-card.presym .lex-row-label { color: var(--blue); }
+    .lex-card.ad     .lex-row-label { color: var(--green); }
+
+    .lex-row-value {
+      color: var(--text);
+      line-height: 1.5;
+    }
+    .lex-row-value strong { font-weight: 600; }
+    .lex-row-value em { font-style: italic; color: var(--muted); }
+
+    .lex-examples {
+      background: var(--bg);
+      border-radius: 10px;
+      padding: 12px 14px;
+      margin-top: auto;
+    }
+    .lex-examples-label {
+      font-size: 0.66rem;
+      font-weight: 700;
+      letter-spacing: 0.6px;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+    .lex-examples ul {
+      list-style: none;
+      padding: 0;
+    }
+    .lex-examples ul li {
+      position: relative;
+      padding-left: 14px;
+      font-size: 0.78rem;
+      color: var(--text);
+      line-height: 1.5;
+      margin-bottom: 4px;
+    }
+    .lex-examples ul li:last-child { margin-bottom: 0; }
+    .lex-examples ul li::before {
+      content: '▸';
+      position: absolute;
+      left: 0; top: 0;
+      font-weight: 700;
+      color: var(--blue);
+    }
+    .lex-card.atrisk .lex-examples ul li::before { color: var(--amber); }
+    .lex-card.presym .lex-examples ul li::before { color: var(--blue); }
+    .lex-card.ad     .lex-examples ul li::before { color: var(--green); }
+
+    .lex-verdict {
+      padding: 12px 14px;
+      border-radius: 10px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      line-height: 1.5;
+    }
+    .lex-card.atrisk .lex-verdict {
+      background: var(--amber-pale);
+      color: var(--amber);
+      border: 1px solid var(--amber-bd);
+    }
+    .lex-card.presym .lex-verdict {
+      background: var(--blue-pale);
+      color: var(--blue);
+      border: 1px solid #f5b9c2;
+    }
+    .lex-card.ad .lex-verdict {
+      background: var(--green-pale);
+      color: var(--green);
+      border: 1px solid var(--green-bd);
+    }
+
+    /* ── KEY TAKEAWAY ── */
+    .takeaway {
+      background: var(--blue-pale);
+      border-left: 4px solid var(--blue);
+      border-radius: 0 12px 12px 0;
+      padding: 18px 24px;
+      margin-bottom: 24px;
+    }
+    .takeaway-label {
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+      color: var(--blue);
+      margin-bottom: 6px;
+    }
+    .takeaway p {
+      font-size: 0.9rem;
+      color: var(--text);
+      margin: 0;
+      line-height: 1.6;
+    }
+    .takeaway p strong { color: var(--blue); }
+
+    /* ── SOURCE ── */
+    .source-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px 20px;
+      font-size: 0.82rem;
+      color: var(--muted);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px 14px;
+      align-items: center;
+    }
+    .source-card strong { color: var(--text); }
+    .source-card a {
+      color: var(--blue);
+      text-decoration: none;
+      font-weight: 600;
+    }
+    .source-card a:hover { text-decoration: underline; }
+    .source-divider { color: var(--border); }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--blue);
+      color: rgba(255,255,255,0.7);
+      text-align: center;
+      padding: 28px 24px;
+      font-size: 0.84rem;
+      margin-top: 40px;
+    }
+    footer strong { color: var(--white); }
+
+    /* ── PRINT STYLES ── */
+    @media print {
+      nav, footer, .print-btn { display: none; }
+      header { border-bottom: 2px solid var(--blue); padding: 12px 20px; }
+      header h1 { font-size: 1.3rem; }
+      header p.subtitle { font-size: 0.85rem; }
+      main { padding: 12px 20px; max-width: 100%; }
+      body { background: white; line-height: 1.4; font-size: 11pt; }
+      .principle, .spectrum, .lex-card, .takeaway, .source-card {
+        break-inside: avoid;
+        box-shadow: none;
+      }
+      .principle, .lex-card-header, .spectrum-seg {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+      .lex-card { font-size: 9pt; }
+      .lex-grid { gap: 10px; margin-bottom: 16px; }
+      .principle { margin-bottom: 14px; padding: 12px 18px; }
+      .principle p { font-size: 9pt; }
+      .spectrum { margin-bottom: 14px; padding: 10px 16px; }
+      .takeaway { margin-bottom: 12px; padding: 12px 18px; }
+    }
+
+    @media (max-width: 880px) {
+      .lex-grid { grid-template-columns: 1fr; }
+      .spectrum-labels { font-size: 0.7rem; }
+    }
+    @media (max-width: 640px) {
+      .header-inner { align-items: flex-start; }
+      nav a { padding: 12px 10px; font-size: 0.78rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════════ NAVIGATION ═══════════════ -->
+<nav>
+  <ul>
+    <li><a href="index.html">Home</a></li>
+    <li><a href="framework.html">Framework</a></li>
+    <li><a href="decision-card.html">IWG Diagnosis Recommended Algorithm</a></li>
+    <li><a href="steering-committee.html">Steering Committee</a></li>
+    <li><a href="educational-material.html" class="active">Educational Material</a></li>
+  </ul>
+</nav>
+
+<!-- ═══════════════ HEADER ═══════════════ -->
+<header>
+  <div class="header-inner">
+    <div class="header-text">
+      <a href="educational-material.html" style="display:inline-flex; align-items:center; gap:6px; color:var(--muted); text-decoration:none; font-size:0.82rem; font-weight:500; margin-bottom:10px; transition: color 0.15s;" onmouseover="this.style.color='var(--blue)'" onmouseout="this.style.color='var(--muted)'">← Back to Educational Material</a>
+      <span class="header-label">One-Page Summary · IWG 2024</span>
+      <h1>The IWG 2024 Lexicon</h1>
+      <p class="subtitle">
+        The three diagnostic categories proposed by the International Working Group to characterise individuals along the Alzheimer disease continuum.
+      </p>
+    </div>
+    <button class="print-btn" onclick="window.print()">🖨 Print this summary</button>
+  </div>
+</header>
+
+<!-- ═══════════════ MAIN ═══════════════ -->
+<main>
+
+  <!-- PRINCIPLE BANNER -->
+  <div class="principle">
+    <p>
+      The IWG defines Alzheimer disease as a <em>clinical-biological construct</em>: a diagnosis of AD requires both a recognised clinical phenotype <em>and</em> supportive biomarker evidence. In cognitively unimpaired individuals, biomarker positivity defines a state of <em>risk</em> — not disease.
+    </p>
+  </div>
+
+  <!-- SPECTRUM -->
+  <div class="spectrum">
+    <div class="spectrum-title">The continuum from healthy to Alzheimer disease</div>
+    <div class="spectrum-bar">
+      <div class="spectrum-seg healthy">Healthy</div>
+      <div class="spectrum-seg atrisk">Asymptomatic at-Risk</div>
+      <div class="spectrum-seg presym">Presymptomatic AD</div>
+      <div class="spectrum-seg ad">Alzheimer Disease</div>
+    </div>
+    <div class="spectrum-labels">
+      <span>No biomarkers<br>No symptoms</span>
+      <span>Biomarker positive<br>Uncertain progression</span>
+      <span>High-risk biomarker profile<br>Near-deterministic progression</span>
+      <span>Clinical phenotype<br>Biomarker positive</span>
+    </div>
+  </div>
+
+  <!-- LEXICON CARDS -->
+  <div class="lex-grid">
+
+    <!-- ── 1. ASYMPTOMATIC AT-RISK ── -->
+    <div class="lex-card atrisk">
+      <div class="lex-card-header">
+        <div class="lex-step">Category 1</div>
+        <h3>Asymptomatic at Risk for AD
+          <span class="lex-cat-sub">Cognitively normal · Biomarker positive</span>
+        </h3>
+      </div>
+      <div class="lex-card-body">
+
+        <div class="lex-row">
+          <div class="lex-row-label">Cognition</div>
+          <div class="lex-row-value">Cognitively normal on objective testing — no clinical phenotype of AD.</div>
+        </div>
+
+        <div class="lex-row">
+          <div class="lex-row-label">Biomarkers</div>
+          <div class="lex-row-value">
+            Brain amyloidopathy either isolated, or associated with tauopathy <strong>limited to the medial temporal regions</strong>, or a positive phosphorylated tau (p-tau) fluid biomarker.
+          </div>
+        </div>
+
+        <div class="lex-row">
+          <div class="lex-row-label">Lifetime risk</div>
+          <div class="lex-row-value">
+            Increased compared to biomarker-negative individuals, but <strong>far from a deterministic rate</strong> of clinical progression.
+          </div>
+        </div>
+
+        <div class="lex-examples">
+          <div class="lex-examples-label">Typical biomarker patterns</div>
+          <ul>
+            <li>Isolated amyloid positivity (A+ T−)</li>
+            <li>Amyloid + tau limited to medial temporal lobe</li>
+            <li>Positive p-tau fluid biomarker (e.g. plasma p-tau 217)</li>
+          </ul>
+        </div>
+
+        <div class="lex-verdict">
+          → Should <em>not</em> be defined as having AD. Communicate risk, not diagnosis.
+        </div>
+      </div>
+    </div>
+
+    <!-- ── 2. PRESYMPTOMATIC AD ── -->
+    <div class="lex-card presym">
+      <div class="lex-card-header">
+        <div class="lex-step">Category 2</div>
+        <h3>Presymptomatic AD
+          <span class="lex-cat-sub">Cognitively normal · Near-deterministic profile</span>
+        </h3>
+      </div>
+      <div class="lex-card-body">
+
+        <div class="lex-row">
+          <div class="lex-row-label">Cognition</div>
+          <div class="lex-row-value">Cognitively normal — but with a specific biomarker pattern indicating that clinical symptoms are virtually inevitable.</div>
+        </div>
+
+        <div class="lex-row">
+          <div class="lex-row-label">Biomarkers</div>
+          <div class="lex-row-value">
+            A profile <strong>associated with a very high lifetime risk</strong> of progression to clinical AD — close to 100% in monogenic forms.
+          </div>
+        </div>
+
+        <div class="lex-row">
+          <div class="lex-row-label">Lifetime risk</div>
+          <div class="lex-row-value">
+            <strong>Near-deterministic.</strong> Development of clinical symptoms is virtually inevitable, though timing varies.
+          </div>
+        </div>
+
+        <div class="lex-examples">
+          <div class="lex-examples-label">Recognised presymptomatic conditions</div>
+          <ul>
+            <li>Autosomal dominant mutations (APP, PSEN1, PSEN2)</li>
+            <li>Persons with Down syndrome (trisomy 21)</li>
+            <li>APOE ε4 homozygotes with SORL1 loss-of-function</li>
+            <li>Sporadic AD with amyloid PET(+) and tau PET(+) in <strong>neocortical regions</strong></li>
+          </ul>
+        </div>
+
+        <div class="lex-verdict">
+          → A diagnostic construct for individuals proximate to symptomatic AD.
+        </div>
+      </div>
+    </div>
+
+    <!-- ── 3. AD ── -->
+    <div class="lex-card ad">
+      <div class="lex-card-header">
+        <div class="lex-step">Category 3</div>
+        <h3>Alzheimer Disease (AD)
+          <span class="lex-cat-sub">Cognitively impaired · Phenotype + Biomarkers</span>
+        </h3>
+      </div>
+      <div class="lex-card-body">
+
+        <div class="lex-row">
+          <div class="lex-row-label">Cognition</div>
+          <div class="lex-row-value">Cognitively impaired with a <strong>specific Alzheimer disease clinical phenotype</strong>, common or uncommon.</div>
+        </div>
+
+        <div class="lex-row">
+          <div class="lex-row-label">Biomarkers</div>
+          <div class="lex-row-value">
+            Positivity of <strong>cerebrospinal fluid or PET pathophysiological AD biomarkers</strong>. Plasma biomarkers (e.g. p-tau 217) may soon enter the routine clinical workup.
+          </div>
+        </div>
+
+        <div class="lex-row">
+          <div class="lex-row-label">Stages</div>
+          <div class="lex-row-value">
+            Includes both the <strong>prodromal stage</strong> (MCI, no loss of function) and the <strong>dementia stage</strong> (with loss of function).
+          </div>
+        </div>
+
+        <div class="lex-examples">
+          <div class="lex-examples-label">Recognised AD clinical phenotypes</div>
+          <ul>
+            <li><strong>Common:</strong> amnestic syndrome of the hippocampal type</li>
+            <li><strong>Common:</strong> logopenic variant primary progressive aphasia</li>
+            <li><strong>Common:</strong> posterior cortical atrophy</li>
+            <li><strong>Uncommon:</strong> corticobasal syndrome, behavioural / dysexecutive variant</li>
+          </ul>
+        </div>
+
+        <div class="lex-verdict">
+          → Diagnosis of Alzheimer disease established.
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- KEY TAKEAWAY -->
+  <div class="takeaway">
+    <div class="takeaway-label">Key takeaway</div>
+    <p>
+      <strong>Asymptomatic at-Risk</strong> and <strong>Presymptomatic AD</strong> are not stages of Alzheimer disease — they are categories of <em>risk</em>. The diagnostic label "Alzheimer disease" is reserved for individuals who present with both a recognised clinical phenotype <em>and</em> supportive biomarker evidence.
+    </p>
+  </div>
+
+  <!-- SOURCE -->
+  <div class="source-card">
+    <strong>Source:</strong>
+    <span>Dubois B, Villain N, Schneider L, Fox N, et al. — Box: The 2024 IWG Lexicon, <em>JAMA Neurology</em> 2024;81(12):1304–1311</span>
+    <span class="source-divider">·</span>
+    <a href="framework.html">Read the framework →</a>
+    <span class="source-divider">·</span>
+    <a href="clinicians-card.html">For clinicians →</a>
+  </div>
+
+</main>
+
+<!-- ═══════════════ FOOTER ═══════════════ -->
+<footer>
+  <strong>International Working Group on Alzheimer Disease</strong><br>
+  Dubois B, Villain N, Schneider L, Fox N, et al. — <em>JAMA Neurology.</em> 2024;81(12):1304–1311 · doi:10.1001/jamaneurol.2024.3770
+</footer>
+
+</body>
+</html>

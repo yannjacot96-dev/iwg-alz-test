@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>IWG — Diagnosis Recommended Algorithm</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --blue:       #C41230;
+      --blue-light: #e8354a;
+      --blue-pale:  #fce8ec;
+      --accent:     #8B0018;
+      --text:       #1a1a1a;
+      --muted:      #6b6b6b;
+      --border:     #e8dede;
+      --white:      #ffffff;
+      --bg:         #f8f6f6;
+
+      /* decision colours — pastel backgrounds, dark text for legibility */
+      --c-est:        #a5d6a7;  /* Highly probable – pastel green */
+      --c-est-text:   #1b5e20;
+      --c-prob:       #c5e1a5;  /* Probable – light pastel green */
+      --c-prob-text:  #33691e;
+      --c-poss:       #fff59d;  /* Possible – pastel yellow */
+      --c-poss-text:  #b45309;
+      --c-unl:        #ffcc80;  /* Unlikely – pastel orange */
+      --c-unl-text:   #e65100;
+      --c-excl:       #f5b7b1;  /* Highly unlikely – pastel coral (distinct from IWG red) */
+      --c-excl-text:  #922b21;
+      --c-na:         #cfd8dc;  /* Non-assessable – pastel grey */
+      --c-na-text:    #455a64;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+    }
+
+    /* ── NAV ── */
+    nav {
+      background: var(--white);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    nav ul {
+      display: flex;
+      justify-content: center;
+      gap: 0;
+      list-style: none;
+      max-width: 900px;
+      margin: 0 auto;
+      overflow-x: auto;
+    }
+    nav a {
+      display: block;
+      padding: 14px 18px;
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 500;
+      white-space: nowrap;
+      transition: color 0.2s, border-bottom 0.2s;
+      border-bottom: 3px solid transparent;
+    }
+    nav a:hover  { color: var(--blue); border-bottom-color: var(--blue); }
+    nav a.active { color: var(--blue); border-bottom-color: var(--blue); }
+
+    /* ── HEADER ── */
+    header {
+      background: var(--white);
+      border-bottom: 3px solid var(--blue);
+      padding: 40px 24px 32px;
+    }
+    .header-inner { max-width: 1100px; margin: 0 auto; }
+    .header-label {
+      display: inline-block;
+      background: var(--blue-pale);
+      color: var(--blue);
+      border-radius: 20px;
+      padding: 4px 14px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+    header h1 {
+      font-size: clamp(1.6rem, 4vw, 2.4rem);
+      font-weight: 700;
+      line-height: 1.2;
+      color: var(--blue);
+      margin-bottom: 10px;
+    }
+    header p.subtitle {
+      font-size: 1rem;
+      color: var(--muted);
+      max-width: 720px;
+    }
+
+    /* ── LAYOUT ── */
+    main { max-width: 1100px; margin: 0 auto; padding: 48px 24px 80px; }
+
+    /* ── INTRO HIGHLIGHT ── */
+    .intro-highlight {
+      background: var(--blue-pale);
+      border-left: 4px solid var(--blue);
+      border-radius: 0 8px 8px 0;
+      padding: 22px 26px;
+      margin-bottom: 40px;
+      font-size: 0.95rem;
+    }
+    .intro-highlight strong { color: var(--blue); }
+    .intro-highlight p + p { margin-top: 10px; }
+
+    /* ── LEGEND ── */
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 28px;
+      padding: 16px 20px;
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+    }
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.78rem;
+      color: var(--text);
+    }
+    .legend-swatch {
+      width: 16px; height: 16px;
+      border-radius: 4px;
+      flex-shrink: 0;
+    }
+
+    /* ── MATRIX ── */
+    .matrix-wrap {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 28px;
+      overflow-x: auto;
+      margin-bottom: 32px;
+    }
+
+    .matrix {
+      width: 100%;
+      min-width: 760px;
+      border-collapse: separate;
+      border-spacing: 6px;
+    }
+
+    /* corner cell */
+    .matrix th.corner {
+      background: transparent;
+      border: none;
+      width: 170px;
+    }
+
+    /* column headers (phenotype groups) */
+    .matrix th.col-head {
+      background: var(--blue);
+      color: var(--white);
+      padding: 14px 14px;
+      border-radius: 10px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      text-align: center;
+      line-height: 1.35;
+      vertical-align: middle;
+    }
+    .matrix th.col-head .col-sub {
+      display: block;
+      font-size: 0.7rem;
+      font-weight: 400;
+      color: rgba(255,255,255,0.85);
+      margin-top: 3px;
+      font-style: italic;
+    }
+
+    /* row headers (biomarker profiles) */
+    .matrix th.row-head {
+      background: var(--bg);
+      color: var(--text);
+      padding: 12px 14px;
+      border-radius: 10px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      text-align: left;
+      border: 1px solid var(--border);
+      vertical-align: middle;
+      white-space: nowrap;
+    }
+
+    .biomarker-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-family: 'SF Mono', 'Menlo', monospace;
+      font-size: 0.85rem;
+    }
+    .bm {
+      display: inline-block;
+      min-width: 26px;
+      padding: 2px 6px;
+      border-radius: 5px;
+      font-size: 0.74rem;
+      font-weight: 700;
+      text-align: center;
+    }
+    .bm.pos { background: #e8f5e9; color: #2e7d32; border: 1px solid #a5d6a7; }
+    .bm.neg { background: #ffebee; color: #c62828; border: 1px solid #ef9a9a; }
+    .bm.unk { background: #f5f5f5; color: #616161; border: 1px solid #e0e0e0; }
+
+    /* cells */
+    .matrix td.cell {
+      position: relative;
+      padding: 16px 14px;
+      border-radius: 10px;
+      text-align: center;
+      font-size: 0.82rem;
+      font-weight: 700;
+      cursor: default;
+      transition: transform 0.15s, box-shadow 0.15s;
+      min-height: 60px;
+    }
+    .matrix td.cell:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(0,0,0,0.15);
+      z-index: 5;
+    }
+    .matrix td.cell .cell-label {
+      display: block;
+      line-height: 1.3;
+    }
+
+    /* cell colours — pastel backgrounds with matching dark text */
+    .cell.c-est  { background: var(--c-est);  color: var(--c-est-text); }
+    .cell.c-prob { background: var(--c-prob); color: var(--c-prob-text); }
+    .cell.c-poss { background: var(--c-poss); color: var(--c-poss-text); }
+    .cell.c-unl  { background: var(--c-unl);  color: var(--c-unl-text); }
+    .cell.c-excl { background: var(--c-excl); color: var(--c-excl-text); }
+    .cell.c-na   { background: var(--c-na);   color: var(--c-na-text); }
+
+    /* tooltip */
+    .cell .tip {
+      display: none;
+      position: absolute;
+      bottom: calc(100% + 8px);
+      left: 50%;
+      transform: translateX(-50%);
+      background: #1a1a1a;
+      color: #fff;
+      font-size: 0.78rem;
+      font-weight: 400;
+      line-height: 1.5;
+      padding: 10px 14px;
+      border-radius: 8px;
+      width: 240px;
+      text-align: left;
+      z-index: 20;
+      pointer-events: none;
+    }
+    .cell .tip strong {
+      display: block;
+      color: #ffb4b4;
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+    .cell .tip::after {
+      content: '';
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      border: 6px solid transparent;
+      border-top-color: #1a1a1a;
+    }
+    .cell:hover .tip { display: block; }
+
+    /* ── KEY MESSAGE ── */
+    .key-message {
+      background: linear-gradient(135deg, var(--blue) 0%, var(--accent) 100%);
+      color: var(--white);
+      border-radius: 16px;
+      padding: 28px 32px;
+      margin-bottom: 32px;
+    }
+    .key-message h3 {
+      font-size: 0.78rem;
+      font-weight: 600;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.75);
+      margin-bottom: 12px;
+    }
+    .key-message p {
+      font-size: 1rem;
+      font-weight: 500;
+      line-height: 1.65;
+    }
+    .key-message p + p { margin-top: 12px; }
+    .key-message em {
+      background: rgba(255,255,255,0.15);
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-style: normal;
+      font-weight: 600;
+    }
+
+    /* ── INTERACTIVE TOOL CTA ── */
+    .tool-cta {
+      background: linear-gradient(135deg, var(--blue) 0%, var(--accent) 100%);
+      color: var(--white);
+      border-radius: 14px;
+      padding: 22px 28px;
+      margin-bottom: 28px;
+      display: flex;
+      align-items: center;
+      gap: 22px;
+      flex-wrap: wrap;
+    }
+    .tool-cta-icon {
+      width: 52px;
+      height: 52px;
+      background: rgba(255,255,255,0.18);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.4rem;
+      flex-shrink: 0;
+    }
+    .tool-cta-text {
+      flex: 1;
+      min-width: 240px;
+    }
+    .tool-cta-text .tc-label {
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.8);
+      margin-bottom: 4px;
+    }
+    .tool-cta-text h3 {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--white);
+      margin-bottom: 4px;
+      line-height: 1.3;
+    }
+    .tool-cta-text p {
+      font-size: 0.88rem;
+      color: rgba(255,255,255,0.92);
+      margin: 0;
+      line-height: 1.5;
+    }
+    .tool-cta-btn {
+      background: var(--white);
+      color: var(--blue);
+      text-decoration: none;
+      padding: 11px 22px;
+      border-radius: 8px;
+      font-size: 0.88rem;
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: transform 0.15s, box-shadow 0.15s;
+      white-space: nowrap;
+    }
+    .tool-cta-btn:hover {
+      transform: translateX(2px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+
+    /* ── SOURCE ── */
+    .source-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px 24px;
+      font-size: 0.88rem;
+      color: var(--muted);
+    }
+    .source-card strong { color: var(--text); }
+    .source-card a {
+      color: var(--blue);
+      text-decoration: none;
+      font-weight: 600;
+    }
+    .source-card a:hover { text-decoration: underline; }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--blue);
+      color: rgba(255,255,255,0.7);
+      text-align: center;
+      padding: 32px 24px;
+      font-size: 0.85rem;
+      margin-top: 40px;
+    }
+    footer strong { color: var(--white); }
+
+    @media (max-width: 760px) {
+      .matrix th.corner { width: 130px; }
+      .matrix td.cell { font-size: 0.76rem; padding: 12px 8px; }
+      nav a { padding: 12px 10px; font-size: 0.78rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════════ NAVIGATION ═══════════════ -->
+<nav>
+  <ul>
+    <li><a href="index.html">Home</a></li>
+    <li><a href="framework.html">Framework</a></li>
+    <li><a href="decision-card.html" class="active">IWG Diagnosis Recommended Algorithm</a></li>
+    <li><a href="steering-committee.html">Steering Committee</a></li>
+    <li><a href="educational-material.html">Educational Material</a></li>
+  </ul>
+</nav>
+
+<!-- ═══════════════ HEADER ═══════════════ -->
+<header>
+  <div class="header-inner">
+    <span class="header-label">Clinical Tool · Based on IWG 2021</span>
+    <h1>IWG Diagnosis Recommended Algorithm</h1>
+    <p class="subtitle">A visual reference for interpreting amyloid and tau biomarkers in light of the clinical phenotype — adapted from Table 2 of Dubois et al., <em>Lancet Neurology</em>, 2021.</p>
+  </div>
+</header>
+
+<!-- ═══════════════ MAIN ═══════════════ -->
+<main>
+
+  <!-- INTRO -->
+  <div class="intro-highlight">
+    <p>
+      The same biomarker profile does not have the same diagnostic meaning across clinical syndromes. <strong>Biomarker positivity must always be interpreted in the context of the clinical phenotype.</strong>
+    </p>
+    <p>
+      Hover over any cell to see the recommended further investigations.
+    </p>
+  </div>
+
+  <!-- LEGEND -->
+  <div class="legend">
+    <div class="legend-item"><span class="legend-swatch" style="background: var(--c-est);"></span> Highly probable – established</div>
+    <div class="legend-item"><span class="legend-swatch" style="background: var(--c-prob);"></span> Probable</div>
+    <div class="legend-item"><span class="legend-swatch" style="background: var(--c-poss);"></span> Possible</div>
+    <div class="legend-item"><span class="legend-swatch" style="background: var(--c-unl);"></span> Unlikely</div>
+    <div class="legend-item"><span class="legend-swatch" style="background: var(--c-excl);"></span> Highly unlikely – excluded</div>
+    <div class="legend-item"><span class="legend-swatch" style="background: var(--c-na);"></span> Non-assessable</div>
+  </div>
+
+  <!-- INTERACTIVE TOOL CTA -->
+  <div class="tool-cta">
+    <div class="tool-cta-icon">⚡</div>
+    <div class="tool-cta-text">
+      <div class="tc-label">Interactive companion</div>
+      <h3>Prefer a step-by-step guided approach?</h3>
+      <p>Use the interactive tool to make your selections one at a time and get a tailored result with recommended further investigation.</p>
+    </div>
+    <a href="decision-tool.html" class="tool-cta-btn">Open the tool →</a>
+  </div>
+
+  <!-- MATRIX -->
+  <div class="matrix-wrap">
+    <table class="matrix">
+      <thead>
+        <tr>
+          <th class="corner"></th>
+          <th class="col-head">
+            Common AD phenotypes
+            <span class="col-sub">amnestic · logopenic PPA · posterior cortical atrophy</span>
+          </th>
+          <th class="col-head">
+            Uncommon AD phenotypes
+            <span class="col-sub">behavioural/dysexecutive · corticobasal · non-fluent PPA · semantic variant PPA</span>
+          </th>
+          <th class="col-head">
+            Other phenotypes
+            <span class="col-sub">dementia with Lewy bodies · Richardson · Huntington · ALS</span>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+
+        <!-- A+ T+ -->
+        <tr>
+          <th class="row-head">
+            <span class="biomarker-chip"><span class="bm pos">A+</span><span class="bm pos">T+</span></span>
+          </th>
+          <td class="cell c-est">
+            <span class="cell-label">Highly probable<br>– established</span>
+            <div class="tip"><strong>Further investigation</strong>None required.</div>
+          </td>
+          <td class="cell c-prob">
+            <span class="cell-label">Probable</span>
+            <div class="tip"><strong>Further investigation</strong>None required; careful follow-up needed — an incongruent clinical phenotype and neurodegeneration pattern should trigger a new investigation.</div>
+          </td>
+          <td class="cell c-unl">
+            <span class="cell-label">Unlikely</span>
+            <div class="tip"><strong>Further investigation</strong>Full investigation of cause.</div>
+          </td>
+        </tr>
+
+        <!-- A+ T? -->
+        <tr>
+          <th class="row-head">
+            <span class="biomarker-chip"><span class="bm pos">A+</span><span class="bm unk">T?</span></span>
+          </th>
+          <td class="cell c-prob">
+            <span class="cell-label">Probable</span>
+            <div class="tip"><strong>Further investigation</strong>Consider a tau measure (PET, CSF).</div>
+          </td>
+          <td class="cell c-poss">
+            <span class="cell-label">Possible</span>
+            <div class="tip"><strong>Further investigation</strong>Consider a tau measure (PET, CSF).</div>
+          </td>
+          <td class="cell c-unl">
+            <span class="cell-label">Unlikely</span>
+            <div class="tip"><strong>Further investigation</strong>Full investigation of cause.</div>
+          </td>
+        </tr>
+
+        <!-- A+ T- -->
+        <tr>
+          <th class="row-head">
+            <span class="biomarker-chip"><span class="bm pos">A+</span><span class="bm neg">T−</span></span>
+          </th>
+          <td class="cell c-prob">
+            <span class="cell-label">Probable</span>
+            <div class="tip"><strong>Further investigation</strong>Consider an additional tau measure (PET, CSF).</div>
+          </td>
+          <td class="cell c-poss">
+            <span class="cell-label">Possible</span>
+            <div class="tip"><strong>Further investigation</strong>Consider an additional tau measure (PET, CSF).</div>
+          </td>
+          <td class="cell c-unl">
+            <span class="cell-label">Unlikely</span>
+            <div class="tip"><strong>Further investigation</strong>Full investigation of cause.</div>
+          </td>
+        </tr>
+
+        <!-- A? T+ -->
+        <tr>
+          <th class="row-head">
+            <span class="biomarker-chip"><span class="bm unk">A?</span><span class="bm pos">T+</span></span>
+          </th>
+          <td class="cell c-poss">
+            <span class="cell-label">Possible</span>
+            <div class="tip"><strong>Further investigation</strong>Consider an amyloid measure (PET, CSF).</div>
+          </td>
+          <td class="cell c-unl">
+            <span class="cell-label">Unlikely</span>
+            <div class="tip"><strong>Further investigation</strong>Full investigation of cause and consider an amyloid measure (PET, CSF).</div>
+          </td>
+          <td class="cell c-unl">
+            <span class="cell-label">Unlikely</span>
+            <div class="tip"><strong>Further investigation</strong>Full investigation of cause.</div>
+          </td>
+        </tr>
+
+        <!-- A- T+ -->
+        <tr>
+          <th class="row-head">
+            <span class="biomarker-chip"><span class="bm neg">A−</span><span class="bm pos">T+</span></span>
+          </th>
+          <td class="cell c-poss">
+            <span class="cell-label">Possible</span>
+            <div class="tip"><strong>Further investigation</strong>Consider an additional amyloid measure (PET, CSF).</div>
+          </td>
+          <td class="cell c-unl">
+            <span class="cell-label">Unlikely</span>
+            <div class="tip"><strong>Further investigation</strong>Full investigation of cause.</div>
+          </td>
+          <td class="cell c-unl">
+            <span class="cell-label">Unlikely</span>
+            <div class="tip"><strong>Further investigation</strong>Full investigation of cause.</div>
+          </td>
+        </tr>
+
+        <!-- A- T? -->
+        <tr>
+          <th class="row-head">
+            <span class="biomarker-chip"><span class="bm neg">A−</span><span class="bm unk">T?</span></span>
+          </th>
+          <td class="cell c-unl">
+            <span class="cell-label">Unlikely</span>
+            <div class="tip"><strong>Further investigation</strong>Full investigation of cause and consider a tau measure (PET, CSF).</div>
+          </td>
+          <td class="cell c-excl">
+            <span class="cell-label">Highly unlikely<br>– excluded</span>
+            <div class="tip"><strong>Further investigation</strong>Full investigation of cause.</div>
+          </td>
+          <td class="cell c-excl">
+            <span class="cell-label">Highly unlikely<br>– excluded</span>
+            <div class="tip"><strong>Further investigation</strong>Full investigation of cause.</div>
+          </td>
+        </tr>
+
+        <!-- A? T- -->
+        <tr>
+          <th class="row-head">
+            <span class="biomarker-chip"><span class="bm unk">A?</span><span class="bm neg">T−</span></span>
+          </th>
+          <td class="cell c-unl">
+            <span class="cell-label">Unlikely</span>
+            <div class="tip"><strong>Further investigation</strong>Full investigation of cause and consider an amyloid measure (PET, CSF).</div>
+          </td>
+          <td class="cell c-excl">
+            <span class="cell-label">Highly unlikely<br>– excluded</span>
+            <div class="tip"><strong>Further investigation</strong>Full investigation of cause.</div>
+          </td>
+          <td class="cell c-excl">
+            <span class="cell-label">Highly unlikely<br>– excluded</span>
+            <div class="tip"><strong>Further investigation</strong>Full investigation of cause.</div>
+          </td>
+        </tr>
+
+        <!-- A- T- -->
+        <tr>
+          <th class="row-head">
+            <span class="biomarker-chip"><span class="bm neg">A−</span><span class="bm neg">T−</span></span>
+          </th>
+          <td class="cell c-excl">
+            <span class="cell-label">Highly unlikely<br>– excluded</span>
+            <div class="tip"><strong>Further investigation</strong>Full investigation of cause.</div>
+          </td>
+          <td class="cell c-excl">
+            <span class="cell-label">Highly unlikely<br>– excluded</span>
+            <div class="tip"><strong>Further investigation</strong>Full investigation of cause.</div>
+          </td>
+          <td class="cell c-excl">
+            <span class="cell-label">Highly unlikely<br>– excluded</span>
+            <div class="tip"><strong>Further investigation</strong>Full investigation of cause.</div>
+          </td>
+        </tr>
+
+        <!-- A? T? -->
+        <tr>
+          <th class="row-head">
+            <span class="biomarker-chip"><span class="bm unk">A?</span><span class="bm unk">T?</span></span>
+          </th>
+          <td class="cell c-na">
+            <span class="cell-label">Non-assessable</span>
+            <div class="tip"><strong>Further investigation</strong>Consider tau and amyloid measures (PET, CSF).</div>
+          </td>
+          <td class="cell c-na">
+            <span class="cell-label">Non-assessable</span>
+            <div class="tip"><strong>Further investigation</strong>Full investigation of cause and consider tau and amyloid measures (PET, CSF).</div>
+          </td>
+          <td class="cell c-excl">
+            <span class="cell-label">Highly unlikely<br>– excluded</span>
+            <div class="tip"><strong>Further investigation</strong>Full investigation of cause.</div>
+          </td>
+        </tr>
+
+      </tbody>
+    </table>
+  </div>
+
+  <!-- KEY MESSAGE -->
+  <div class="key-message">
+    <h3>Why this matters</h3>
+    <p>
+      The same <em>A+ T+</em> biomarker profile yields a <em>Highly probable</em> diagnosis of Alzheimer disease in a patient presenting with an amnestic syndrome — but only an <em>Unlikely</em> diagnosis in a patient with a Richardson syndrome or dementia with Lewy bodies.
+    </p>
+    <p>
+      This is the core IWG position: biomarkers are necessary but not sufficient. The clinical phenotype determines the diagnostic weight of any biomarker result.
+    </p>
+  </div>
+
+  <!-- SOURCE -->
+  <div class="source-card">
+    <strong>Source:</strong> Dubois B, Villain N, Frisoni GB, et al. Clinical diagnosis of Alzheimer's disease: recommendations of the International Working Group. <em>Lancet Neurology.</em> 2021; Table 2 — Alzheimer's disease diagnosis in a clinical setting.
+    &nbsp;·&nbsp;
+    <a href="Dubois 2021.pdf" download>⬇ Download PDF</a>
+    &nbsp;·&nbsp;
+    <a href="https://doi.org/10.1016/S1474-4422(21)00066-1" target="_blank">View on Lancet →</a>
+  </div>
+
+</main>
+
+<!-- ═══════════════ FOOTER ═══════════════ -->
+<footer>
+  <strong>International Working Group on Alzheimer Disease</strong><br>
+  Dubois B, Villain N, Schneider L, Fox N, et al. — <em>JAMA Neurology.</em> 2024;81(12):1304–1311 · doi:10.1001/jamaneurol.2024.3770
+</footer>
+
+</body>
+</html>
