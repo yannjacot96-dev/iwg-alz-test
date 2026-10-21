@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>IWG — Members</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --blue:       #C41230;
+      --blue-light: #e8354a;
+      --blue-pale:  #fce8ec;
+      --accent:     #8B0018;
+      --text:       #1a1a1a;
+      --muted:      #6b6b6b;
+      --border:     #e8dede;
+      --white:      #ffffff;
+      --bg:         #f8f6f6;
+    }
+
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+    }
+
+    /* ── NAV ── */
+    nav {
+      background: var(--white);
+      border-bottom: 1px solid var(--border);
+      position: sticky; top: 0; z-index: 100;
+    }
+    nav ul {
+      display: flex; justify-content: center; gap: 0;
+      list-style: none; max-width: 980px; margin: 0 auto; overflow-x: auto;
+    }
+    nav a {
+      display: block; padding: 14px 16px;
+      color: var(--muted); text-decoration: none;
+      font-size: 0.85rem; font-weight: 500; white-space: nowrap;
+      transition: color 0.2s, border-bottom 0.2s;
+      border-bottom: 3px solid transparent;
+    }
+    nav a:hover  { color: var(--blue); border-bottom-color: var(--blue); }
+    nav a.active { color: var(--blue); border-bottom-color: var(--blue); }
+
+    /* ── HEADER ── */
+    header {
+      background: var(--white);
+      border-bottom: 3px solid var(--blue);
+      padding: 40px 24px 32px;
+    }
+    .header-inner { max-width: 960px; margin: 0 auto; }
+    .header-label {
+      display: inline-block; background: var(--blue-pale); color: var(--blue);
+      border-radius: 20px; padding: 4px 14px; font-size: 0.75rem;
+      font-weight: 600; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 16px;
+    }
+    header h1 {
+      font-size: clamp(1.6rem, 4vw, 2.4rem); font-weight: 700;
+      line-height: 1.2; color: var(--blue); margin-bottom: 10px;
+    }
+    header p.subtitle { font-size: 1rem; color: var(--muted); max-width: 640px; }
+
+    /* ── LAYOUT ── */
+    main { max-width: 960px; margin: 0 auto; padding: 48px 24px 80px; }
+
+    h2 {
+      font-size: 1.5rem; font-weight: 700; color: var(--blue);
+      margin-bottom: 8px; display: flex; align-items: center; gap: 12px;
+    }
+    h2 .icon {
+      width: 36px; height: 36px; background: var(--blue-pale); border-radius: 8px;
+      display: flex; align-items: center; justify-content: center; font-size: 1rem; flex-shrink: 0;
+    }
+    .section-intro {
+      color: var(--muted); font-size: 0.95rem; margin-bottom: 28px;
+      padding-bottom: 20px; border-bottom: 1px solid var(--border);
+    }
+    section { margin-bottom: 56px; }
+
+    /* ── CO-AUTHOR LIST (multi-column) ── */
+    .members-list {
+      column-count: 3;
+      column-gap: 28px;
+      list-style: none;
+      margin: 0;
+    }
+    .members-list li {
+      break-inside: avoid;
+      padding: 7px 0 7px 18px;
+      position: relative;
+      font-size: 0.92rem;
+      color: var(--text);
+      border-bottom: 1px solid var(--border);
+    }
+    .members-list li::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 15px;
+      width: 6px; height: 6px;
+      background: var(--blue);
+      border-radius: 50%;
+    }
+
+    /* ── SUPPORTERS ── */
+    .supporters-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 14px;
+    }
+    .supporter-item {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+    .supporter-item .s-name { font-size: 0.9rem; font-weight: 600; color: var(--text); }
+    .supporter-item .s-country { font-size: 0.8rem; color: var(--muted); }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--blue); color: rgba(255,255,255,0.7);
+      text-align: center; padding: 32px 24px; font-size: 0.85rem; margin-top: 40px;
+    }
+    footer strong { color: var(--white); }
+
+    /* ── BACK TO TOP ── */
+    .back-to-top {
+      position: fixed; bottom: 28px; right: 28px;
+      width: 46px; height: 46px; background: var(--blue); color: var(--white);
+      border: none; border-radius: 50%; font-size: 1.2rem; font-weight: 700; cursor: pointer;
+      opacity: 0; visibility: hidden; transform: translateY(8px);
+      transition: opacity 0.25s, visibility 0.25s, transform 0.25s, background 0.2s;
+      box-shadow: 0 4px 14px rgba(196, 18, 48, 0.3); z-index: 60;
+    }
+    .back-to-top.visible { opacity: 1; visibility: visible; transform: translateY(0); }
+    .back-to-top:hover { background: var(--accent); transform: translateY(-3px); }
+
+    @media (max-width: 760px) { .members-list { column-count: 2; } }
+    @media (max-width: 640px) {
+      nav a { padding: 12px 10px; font-size: 0.78rem; }
+      .members-list { column-count: 1; }
+      .back-to-top { bottom: 18px; right: 18px; width: 42px; height: 42px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════════ NAVIGATION ═══════════════ -->
+<nav>
+  <ul>
+    <li><a href="index.html">Home</a></li>
+    <li><a href="framework.html">Framework</a></li>
+    <li><a href="decision-card.html">IWG Diagnosis Recommended Algorithm</a></li>
+    <li><a href="steering-committee.html">Steering Committee</a></li>
+    <li><a href="members.html" class="active">Members</a></li>
+    <li><a href="educational-material.html">Educational Material</a></li>
+  </ul>
+</nav>
+
+<!-- ═══════════════ HEADER ═══════════════ -->
+<header>
+  <div class="header-inner">
+    <span class="header-label">International Working Group</span>
+    <h1>Members</h1>
+    <p class="subtitle">The co-authors of the IWG position papers (2007–2024) and the researchers supporting the group's work.</p>
+  </div>
+</header>
+
+<!-- ═══════════════ MAIN ═══════════════ -->
+<main>
+
+  <!-- ── CO-AUTHORS ── -->
+  <section id="coauthors">
+    <h2><span class="icon">👥</span> Co-authors</h2>
+    <p class="section-intro">The 91 researchers who have co-authored one or more of the IWG position papers between 2007 and 2024.</p>
+
+    <ul class="members-list">
+      <li>Marc Agronin</li>
+      <li>Paul Aisen</li>
+      <li>Ricardo Allegri</li>
+      <li>Sandrine Andrieu</li>
+      <li>Hovagim Bakardjian</li>
+      <li>Pascale Barberger-Gateau</li>
+      <li>Frederik Barkhof</li>
+      <li>Randall Bateman</li>
+      <li>Alexandre Bejanin</li>
+      <li>Habib Benali</li>
+      <li>Lars Bertram</li>
+      <li>Kaj Blennow</li>
+      <li>Mercè Boada</li>
+      <li>Stéphanie Bombois</li>
+      <li>Andrea Bozoki</li>
+      <li>Karl Broich</li>
+      <li>Noll Campbell</li>
+      <li>Stefano Cappa</li>
+      <li>Paulo Caramelli</li>
+      <li>Maria C. Carrillo</li>
+      <li>Enrica Cavedo</li>
+      <li>Sebastian Crutch</li>
+      <li>Jeffrey L. Cummings</li>
+      <li>Jean-François Dartigues</li>
+      <li>Steven T. DeKosky</li>
+      <li>André Delacourte</li>
+      <li>Lisa Delano-Wood</li>
+      <li>Bruno Dubois</li>
+      <li>Charles Duyckaerts</li>
+      <li>Sebastiaan Engelborghs</li>
+      <li>Stéphane Epelbaum</li>
+      <li>Howard H. Feldman</li>
+      <li>Nick C. Fox</li>
+      <li>Kristian Steen Frederiksen</li>
+      <li>Giovanni B. Frisoni</li>
+      <li>Lutz Frölich</li>
+      <li>Douglas Galasko</li>
+      <li>Jennifer Gatchel</li>
+      <li>Serge Gauthier</li>
+      <li>Remy Genthon</li>
+      <li>Jean Georges</li>
+      <li>Alida A. Gouw</li>
+      <li>Marie-Odile Habert</li>
+      <li>Harald Hampel</li>
+      <li>Bernard Hanseeuw</li>
+      <li>David M. Holtzman</li>
+      <li>Agustín Ibañez</li>
+      <li>Clifford R. Jack Jr</li>
+      <li>Claudia Jacova</li>
+      <li>Frank Jessen</li>
+      <li>Gregory A. Jicha</li>
+      <li>David T. Jones</li>
+      <li>Miia Kivipelto</li>
+      <li>Helen Lavretsky</li>
+      <li>Richard Levy</li>
+      <li>Simone Lista</li>
+      <li>Francisco Lopera</li>
+      <li>Kenichi Meguro</li>
+      <li>José-Luis Molinuevo</li>
+      <li>Paul Newhouse</li>
+      <li>Ricardo Nitrini</li>
+      <li>Agneta Nordberg</li>
+      <li>John O'Brien</li>
+      <li>Sid E. O'Bryant</li>
+      <li>Alessandro Padovani</li>
+      <li>Florence Pasquier</li>
+      <li>Vincent Planche</li>
+      <li>Gil D. Rabinovici</li>
+      <li>Craig Ritchie</li>
+      <li>Philippe Robert</li>
+      <li>Martin Rossor</li>
+      <li>Christopher C. Rowe</li>
+      <li>Marwan Sabbagh</li>
+      <li>Stephen Salloway</li>
+      <li>Marie Sarazin</li>
+      <li>Philip Scheltens</li>
+      <li>Lon S. Schneider</li>
+      <li>Jonathan Schott</li>
+      <li>Dennis Selkoe</li>
+      <li>Andrea Slachevsky</li>
+      <li>Leonardo Cruz de Souza</li>
+      <li>Reisa Sperling</li>
+      <li>Yaakov Stern</li>
+      <li>Sandra Swantek</li>
+      <li>Marc Teichmann</li>
+      <li>Madhav Thambisetty</li>
+      <li>Bruno Vellas</li>
+      <li>Nicolas Villain</li>
+      <li>Pieter J. Visser</li>
+      <li>Gunhild Waldemar</li>
+      <li>Eric Widera</li>
+    </ul>
+  </section>
+
+  <!-- ── SUPPORTERS ── -->
+  <section id="supporters">
+    <h2><span class="icon">🤝</span> Supporters</h2>
+    <p class="section-intro">Researchers supporting the work of the International Working Group.</p>
+
+    <div class="supporters-grid">
+      <div class="supporter-item"><span class="s-name">Federica Ribaldi</span><span class="s-country">Switzerland</span></div>
+      <div class="supporter-item"><span class="s-name">Augusto Mendes</span><span class="s-country">Switzerland</span></div>
+      <div class="supporter-item"><span class="s-name">Aurélien Lathuilière</span><span class="s-country">Switzerland</span></div>
+      <div class="supporter-item"><span class="s-name">Tiago Gil Oliveira</span><span class="s-country">Portugal</span></div>
+      <div class="supporter-item"><span class="s-name">Michael Schöll</span><span class="s-country">Sweden</span></div>
+      <div class="supporter-item"><span class="s-name">Angela Bradshaw</span><span class="s-country">Luxembourg</span></div>
+      <div class="supporter-item"><span class="s-name">Daeun Shin</span><span class="s-country">Korea</span></div>
+      <div class="supporter-item"><span class="s-name">Devi Gayatri</span><span class="s-country">USA</span></div>
+    </div>
+  </section>
+
+</main>
+
+<button class="back-to-top" id="backToTop" aria-label="Back to top" onclick="window.scrollTo({top:0, behavior:'smooth'})">↑</button>
+
+<!-- ═══════════════ FOOTER ═══════════════ -->
+<footer>
+  <strong>International Working Group on Alzheimer Disease</strong><br>
+  Dubois B, Villain N, Schneider L, Fox N, et al. — <em>JAMA Neurology.</em> 2024;81(12):1304–1311 · doi:10.1001/jamaneurol.2024.3770
+</footer>
+
+<script>
+  const btn = document.getElementById('backToTop');
+  window.addEventListener('scroll', () => {
+    if (window.scrollY > 400) btn.classList.add('visible');
+    else btn.classList.remove('visible');
+  });
+</script>
+
+</body>
+</html>
